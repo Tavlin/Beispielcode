@@ -32,7 +32,7 @@ void Pi0Simulation(TString AddName = "") {
   fy->SetParameters(1., 0., 4.);
 
   // histograms for generated and accepted pi0's
-  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",100,0.,5.); //edit mehr und nur bis 5 statt 20,0.,10.
+  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",150,0.,5.); //edit mehr und nur bis 5 statt 20,0.,10.
   
   
   SetHistoStandardSettings(hNPi0_gen_pt);
@@ -69,7 +69,7 @@ void Pi0Simulation(TString AddName = "") {
     Float_t pi = TMath::Pi(); /* besser vor dem loop? */
 
     // set pT, rapidity, ...
-    Float_t pt_lab = fpt->GetRandom();
+    Float_t pt_lab = gRandom->Uniform(5.);
     Float_t phi_lab = gRandom->Uniform(2.*pi);
     Float_t y_lab = fy->GetRandom();
 
@@ -161,20 +161,20 @@ void Pi0Simulation(TString AddName = "") {
 
 
 ///////////////////////////////////////////////
-    hNPi0_gen_pt->Fill(pt_lab);
+    hNPi0_gen_pt->Fill(pt_lab, fpt->Eval(pt_lab));
     // Implementiere eine endliche Detektorakzeptanz in phi
     
     //pt
     //60º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/3.)){
-      hNPi0_acc_60->Fill(pt_lab);
+      hNPi0_acc_60->Fill(pt_lab, fpt->Eval(pt_lab));
     }
     
     //90º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/2.)){
-      hNPi0_acc_90->Fill(pt_lab);
+      hNPi0_acc_90->Fill(pt_lab, fpt->Eval(pt_lab));
     }
     
     hNPi0_gen_minv->Fill(minv);
@@ -196,16 +196,16 @@ void Pi0Simulation(TString AddName = "") {
     //60º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/3.)){
-      hNPi0_acc_minv_pt_60->Fill(minv,pt_lab);
+      hNPi0_acc_minv_pt_60->Fill(minv,pt_lab,fpt->Eval(pt_lab));
     }
     
     //90º Detector
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/2.)){
-      hNPi0_acc_minv_pt_90->Fill(minv,pt_lab);
+      hNPi0_acc_minv_pt_90->Fill(minv,pt_lab,fpt->Eval(pt_lab));
     }
     
     //without acc
-    hNPi0_gen_minv_pt->Fill(minv,pt_lab);
+    hNPi0_gen_minv_pt->Fill(minv,pt_lab,fpt->Eval(pt_lab));
 ///////////////////////////////////////////////
    /*
     hNPi0_gen_pt->Fill(pt_lab);
@@ -217,12 +217,14 @@ void Pi0Simulation(TString AddName = "") {
   cNPi0_pt->cd();
   
   gPad->SetTopMargin(0.02);
+
   
   hNPi0_gen_pt->Sumw2();
   hNPi0_gen_pt->SetLineColor(kRed);
   hNPi0_gen_pt->SetMarkerColor(kRed);
   hNPi0_gen_pt->SetMarkerStyle(20);
   hNPi0_gen_pt->SetMarkerSize(1);
+  fpt->SetLineColor(kBlack);
   
   hNPi0_acc_60->Sumw2();
   hNPi0_acc_60->SetLineColor(kBlue);
@@ -238,24 +240,37 @@ void Pi0Simulation(TString AddName = "") {
   
   hNPi0_gen_pt->SetTitle("");
 
+
   //achte auf Reihenfolge weil es die Farbe einfach DRUEBER malt!
+  hNPi0_gen_pt->Scale(150./(Npi0));
+  hNPi0_acc_90->Scale(150./(Npi0));
+  hNPi0_acc_60->Scale(150./(Npi0));
   hNPi0_gen_pt->Draw("");
   hNPi0_acc_90->Draw("same");
   hNPi0_acc_60->Draw("same");
+  fpt->Draw("same");
+  
   cNPi0_pt->SetLogy();
+  
+  TLatex* lNPi0_gen_pt = new TLatex();
+  lNPi0_gen_pt->SetTextSize(0.04);
+  lNPi0_gen_pt->DrawLatex(0.2,0.00000001,"#splitline{#pi_{0} Toy-Monte-Carlo-}{Simulation}");
+  lNPi0_gen_pt->SetTextSize(0.03);
+  lNPi0_gen_pt->DrawLatex(0.2,0.000000001,"fitfunction xe^{#frac{-x}{0.2}}");
   
   hNPi0_gen_pt->SetXTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_gen_pt->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_gen_pt->SetYTitle("#it{counts}");
   hNPi0_gen_pt->GetYaxis()->SetTitleOffset(1.4);
   
-  TLegend *leg_pt = new TLegend(0.35,0.75,0.7,0.95);
+  TLegend *leg_pt = new TLegend(0.4,0.75,0.9,0.95);
+  leg_pt->SetFillStyle(0);
   leg_pt->SetBorderSize(0);
   leg_pt->SetTextFont(43);
   leg_pt->SetTextSize(30);
-  leg_pt->AddEntry(hNPi0_gen_pt, "generated #it{p}_{T} spectrum", "l");
-  leg_pt->AddEntry(hNPi0_acc_90, "90#circ detector #it{p}_{T} spectrum", "l");
-  leg_pt->AddEntry(hNPi0_acc_60, "60#circ detector #it{p}_{T} spectrum", "l");
+  leg_pt->AddEntry(hNPi0_gen_pt, "reconstructed #it{p}_{T} spectrum", "p");
+  leg_pt->AddEntry(hNPi0_acc_90, "90#circ detector #it{p}_{T} spectrum", "p");
+  leg_pt->AddEntry(hNPi0_acc_60, "60#circ detector #it{p}_{T} spectrum", "p");
   leg_pt->Draw("same");
   
   
