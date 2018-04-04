@@ -3,12 +3,21 @@
 void Pi0Simulation(TString AddName = "") {
 
   // Wir definieren ein Canvas auf das wir malen können
-  TCanvas *cExtractSignal = new TCanvas("cExtractSignal","",2400,1600);
+  TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",800,800);
   // Wir stellen ein paar grundlegende Settings ein
-  SetCanvasStandardSettings(cExtractSignal);// (diese Funktion ist in ExtractSignal.h definiert)
+  SetCanvasStandardSettings(cNPi0_pt);// (diese Funktion ist in ExtractSignal.h definiert)
 
-  //EDIT TCanvas
-  cExtractSignal->Divide(3,2);  
+  TCanvas *cNPi0_minv = new TCanvas("cNPi0_minv","",800,800);
+  SetCanvasStandardSettings(cNPi0_minv);
+  
+  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",800,800);
+  SetCanvasStandardSettings(cNPi0_gen_minv_pt);
+  
+  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",800,800);
+  SetCanvasStandardSettings(cNPi0_acc_minv_pt_60);
+  
+  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",800,800);
+  SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
   
   Float_t m = 0.135; // pi0 mass
 
@@ -24,6 +33,8 @@ void Pi0Simulation(TString AddName = "") {
 
   // histograms for generated and accepted pi0's
   TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",100,0.,5.); //edit mehr und nur bis 5 statt 20,0.,10.
+  
+  
   SetHistoStandardSettings(hNPi0_gen_pt);
   TH1F* hNPi0_gen_minv = new TH1F("hNPi0_gen_minv","generated pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_gen_minv);
@@ -203,63 +214,77 @@ void Pi0Simulation(TString AddName = "") {
   }
   
   //pt Drawing
-  cExtractSignal->cd(1);
+  cNPi0_pt->cd();
+  
   gPad->SetTopMargin(0.02);
+  
+  hNPi0_gen_pt->Sumw2();
   hNPi0_gen_pt->SetLineColor(kRed);
+  hNPi0_gen_pt->SetMarkerColor(kRed);
+  hNPi0_gen_pt->SetMarkerStyle(20);
+  hNPi0_gen_pt->SetMarkerSize(1);
+  
+  hNPi0_acc_60->Sumw2();
   hNPi0_acc_60->SetLineColor(kBlue);
-  hNPi0_acc_90->SetLineColor(kGreen);
+  hNPi0_acc_60->SetMarkerColor(kBlue);
+  hNPi0_acc_60->SetMarkerStyle(21);
+  hNPi0_acc_60->SetMarkerSize(1);
+  
+  hNPi0_acc_90->Sumw2();
+  hNPi0_acc_90->SetLineColor(kGreen+2);
+  hNPi0_acc_90->SetMarkerColor(kGreen+2);
+  hNPi0_acc_90->SetMarkerStyle(33);
+  hNPi0_acc_90->SetMarkerSize(1.5);
+  
   hNPi0_gen_pt->SetTitle("");
-  
-  //hNPi0_gen_pt->SetTickLength(1.);
-  
-  //hNPi0_gen_pt->SetXTitle("pt");
 
   //achte auf Reihenfolge weil es die Farbe einfach DRUEBER malt!
   hNPi0_gen_pt->Draw("");
   hNPi0_acc_90->Draw("same");
   hNPi0_acc_60->Draw("same");
-  gPad->SetLogy();
+  cNPi0_pt->SetLogy();
   
-  TLegend *leg_pt = new TLegend(0.6,0.6,0.9,0.9);
+  hNPi0_gen_pt->SetXTitle("#it{p}_{T} (GeV/#it{c})");
+  hNPi0_gen_pt->GetXaxis()->SetTitleOffset(1.4);
+  hNPi0_gen_pt->SetYTitle("#it{counts}");
+  hNPi0_gen_pt->GetYaxis()->SetTitleOffset(1.4);
+  
+  TLegend *leg_pt = new TLegend(0.35,0.75,0.7,0.95);
   leg_pt->SetBorderSize(0);
   leg_pt->SetTextFont(43);
   leg_pt->SetTextSize(30);
   leg_pt->AddEntry(hNPi0_gen_pt, "generated #it{p}_{T} spectrum", "l");
+  leg_pt->AddEntry(hNPi0_acc_90, "90#circ detector #it{p}_{T} spectrum", "l");
+  leg_pt->AddEntry(hNPi0_acc_60, "60#circ detector #it{p}_{T} spectrum", "l");
   leg_pt->Draw("same");
   
   
   //invariante Masse Drawing:
-  cExtractSignal->cd(2);
+  cNPi0_minv->cd();
 
   hNPi0_gen_minv->SetLineColor(kRed);
   hNPi0_acc_minv_60->SetLineColor(kBlue);
-  hNPi0_acc_minv_90->SetLineColor(kGreen);
-  //gPad->SetLogy();
-  //hNPi0_gen_minv->SetTitle("");
-  //hNPi0_gen_minv->Draw("");
+  hNPi0_acc_minv_90->SetLineColor(kGreen+2);
   hNPi0_acc_minv_90->SetTitle("");
   
-  //hNPi0_acc_minv_90->SetTickLength(0.1);
-  
-  //hNPi0_acc_minv_90->SetXTitle("minv");
   hNPi0_acc_minv_90->Draw("");
   hNPi0_acc_minv_60->Draw("same");
   
   
   //pt gegen minv
   //generiertes ohne akzeptanz
-  cExtractSignal->cd(4);
+  cNPi0_gen_minv_pt->cd();
   
   hNPi0_gen_minv_pt->SetTitle("without acceptance");
   
-  //hNPi0_gen_minv_pt->SetTickLength(0.2);
-  
-  //hNPi0_gen_minv_pt->SetXTitle("minv");
-  //hNPi0_gen_minv_pt->SetTitle("pt");
+  hNPi0_gen_minv_pt->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
+  hNPi0_gen_minv_pt->GetXaxis()->SetTitleOffset(1.4);
+  hNPi0_gen_minv_pt->SetYTitle("#it{p}_{T} (GeV/#it{c})");
+  hNPi0_gen_minv_pt->GetYaxis()->SetTitleOffset(1.4);
   hNPi0_gen_minv_pt->Draw("colz");
   
   //mit Akzeptanz von 90 Grad
-  cExtractSignal->cd(5);
+  cNPi0_acc_minv_pt_90->cd();
   
   
   hNPi0_acc_minv_pt_90->SetTitle("90 Degree acceptance");
@@ -269,19 +294,25 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_pt_90->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_acc_minv_pt_90->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_90->SetYTitle("#it{p}_{T} (GeV/#it{c})");
+  hNPi0_acc_minv_pt_90->GetYaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_90->Draw("colz");
   
   //mit Akzeptanz von 60 Grad
-  cExtractSignal->cd(6);
+  cNPi0_acc_minv_pt_60->cd();
   
   hNPi0_acc_minv_pt_60->SetTitle("60 Degree acceptance");
   
-  //hNPi0_acc_minv_pt_60->SetTickLength(0.2);
-  
-  //hNPi0_acc_minv_pt_60->SetXTitle("minv");
-  //hNPi0_acc_minv_pt_60->SetTitle("pt");
+  hNPi0_acc_minv_pt_60->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
+  hNPi0_acc_minv_pt_60->GetXaxis()->SetTitleOffset(1.4);
+  hNPi0_acc_minv_pt_60->SetYTitle("#it{p}_{T} (GeV/#it{c})");
+  hNPi0_acc_minv_pt_60->GetYaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_60->Draw("colz");
   
-  cExtractSignal->SaveAs(Form("Simulation/InvarianteMasseSignal%s.pdf", AddName.Data()));
+  cNPi0_pt->SaveAs(Form("Simulation/TransversalImpuls%s.pdf", AddName.Data()));
+  cNPi0_minv->SaveAs(Form("Simulation/InvarianteMasse%s.pdf", AddName.Data()));
+  cNPi0_gen_minv_pt->SaveAs(Form("Simulation/InvarianteMasseTransversalImpulsSignal%s.pdf", AddName.Data()));
+  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls90Grad%s.pdf", AddName.Data()));
+  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls60Grad%s.pdf", AddName.Data()));
+  
   cout << endl;
 }

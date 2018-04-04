@@ -120,7 +120,7 @@ void SetCanvasStandardSettings(TCanvas *cCanv){
   cCanv->SetLeftMargin(0.15);
   cCanv->SetTickx();
   cCanv->SetTicky();
-  cCanv->SetLogy(1); //counts besser log, da sonst nicht anschaulich
+  cCanv->SetLogy(0); //counts besser log, da sonst nicht anschaulich
   cCanv->SetLogx(0);
 }
 
@@ -136,6 +136,7 @@ void SetHistoStandardSettings(TH1* histo, Double_t XOffset = 1.2, Double_t YOffs
   histo->GetYaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetTitleFont(43);
   histo->GetXaxis()->SetTitleFont(43);
+
   
 
 
