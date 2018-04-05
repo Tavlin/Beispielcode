@@ -1,6 +1,6 @@
 #include "CommenHeader.h"
 
-void Pi0Simulation(TString AddName = "") {
+void Tset(TString AddName = "") {
 
   // Wir definieren ein Canvas auf das wir malen können
   TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",800,800);
@@ -18,9 +18,6 @@ void Pi0Simulation(TString AddName = "") {
   
   TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",800,800);
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
-  
-  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",800,800);
-  SetCanvasStandardSettings(cNPi0_acc_minv_comp);
   
   Float_t m = 0.135; // pi0 mass
 
@@ -65,16 +62,6 @@ void Pi0Simulation(TString AddName = "") {
   // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
   TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",100,0.,5.);
   SetHistoStandardSettings(hNPi0_acc_90);
-  
-  TH1F* hNPi0_acc_minv_high_pt = new TH1F("hNPi0_acc_minv_high_pt","accepted pi0 minv spectrum",100,0.,0.5);
-  SetHistoStandardSettings(hNPi0_acc_minv_high_pt);
-  
-  TH1F* hNPi0_acc_minv_mid_pt = new TH1F("hNPi0_acc_minv_mid_pt","accepted pi0 minv spectrum",100,0.,0.5);
-  SetHistoStandardSettings(hNPi0_acc_minv_mid_pt);
-  
-  TH1F* hNPi0_acc_minv_low_pt = new TH1F("hNPi0_acc_minv_low_pt","accepted pi0 minv spectrum",100,0.,0.5);
-  SetHistoStandardSettings(hNPi0_acc_minv_low_pt);
-  
 
   for (int ip=0; ip < Npi0; ip++) {
     printProgress( ((Double_t)ip) / ((Double_t)Npi0) );
@@ -82,11 +69,10 @@ void Pi0Simulation(TString AddName = "") {
     Float_t pi = TMath::Pi(); /* besser vor dem loop? */
 
     // set pT, rapidity, ...
-    Float_t pt_lab = gRandom->Uniform(5.);
+    Float_t pt_lab = fpt->GetRandom();
     Float_t phi_lab = gRandom->Uniform(2.*pi);
     Float_t y_lab = fy->GetRandom();
 
-       
     Float_t mt_lab = sqrt(m*m + pt_lab*pt_lab);
     Float_t e_lab = mt_lab * cosh(y_lab);
     Float_t px_lab = pt_lab * cos(phi_lab);
@@ -109,7 +95,7 @@ void Pi0Simulation(TString AddName = "") {
     Float_t p2y_star = - p1y_star;
     Float_t p2z_star = - p1z_star;
 
-    Float_t beta = 1./sqrt(1.+(m*m)/(p_lab*p_lab));
+    Float_t beta = 1./sqrt(1+(m*m)/(p_lab*p_lab));
     Float_t gamma = 1./sqrt(1.-beta*beta);
 
     // Lorentz transform of the momentum vectors of the two decay photons
@@ -175,20 +161,20 @@ void Pi0Simulation(TString AddName = "") {
 
 
 ///////////////////////////////////////////////
-    hNPi0_gen_pt->Fill(pt_lab, fpt->Eval(pt_lab));
+    hNPi0_gen_pt->Fill(pt_lab);
     // Implementiere eine endliche Detektorakzeptanz in phi
     
     //pt
     //60º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/3.)){
-      hNPi0_acc_60->Fill(pt_lab, fpt->Eval(pt_lab));
+      hNPi0_acc_60->Fill(pt_lab);
     }
     
     //90º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/2.)){
-      hNPi0_acc_90->Fill(pt_lab, fpt->Eval(pt_lab));
+      hNPi0_acc_90->Fill(pt_lab);
     }
     
     hNPi0_gen_minv->Fill(minv);
@@ -210,30 +196,16 @@ void Pi0Simulation(TString AddName = "") {
     //60º Detector
     
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/3.)){
-      hNPi0_acc_minv_pt_60->Fill(minv,pt_lab,fpt->Eval(pt_lab));
+      hNPi0_acc_minv_pt_60->Fill(minv,pt_lab);
     }
     
     //90º Detector
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/2.)){
-      hNPi0_acc_minv_pt_90->Fill(minv,pt_lab,fpt->Eval(pt_lab));
+      hNPi0_acc_minv_pt_90->Fill(minv,pt_lab);
     }
     
     //without acc
-    hNPi0_gen_minv_pt->Fill(minv,pt_lab,fpt->Eval(pt_lab));
-    
-    
-    //comparison between high, mid and low pt m_inv 
-    if(pt_lab > 3.32 && pt_lab <= 5.){
-      hNPi0_acc_minv_high_pt->Fill(minv);
-    }
-    
-    if(pt_lab > 1.66 && pt_lab <= 3.32){
-      hNPi0_acc_minv_mid_pt->Fill(minv);
-    }
-    
-    if(pt_lab <= 1.66 && pt_lab > 0.){
-      hNPi0_acc_minv_low_pt->Fill(minv);
-    }
+    hNPi0_gen_minv_pt->Fill(minv,pt_lab);
 ///////////////////////////////////////////////
    /*
     hNPi0_gen_pt->Fill(pt_lab);
@@ -245,7 +217,6 @@ void Pi0Simulation(TString AddName = "") {
   cNPi0_pt->cd();
   
   gPad->SetTopMargin(0.02);
-  cNPi0_pt->SetRightMargin(0.025);
 
   
   hNPi0_gen_pt->Sumw2();
@@ -284,25 +255,26 @@ void Pi0Simulation(TString AddName = "") {
   TLatex* lNPi0_gen_pt = new TLatex();
   lNPi0_gen_pt->SetTextSize(0.04);
   lNPi0_gen_pt->DrawLatex(0.2,0.00000001,"#splitline{#pi_{0} Toy-Monte-Carlo-}{Simulation}");
+  lNPi0_gen_pt->SetTextSize(0.03);
+  lNPi0_gen_pt->DrawLatex(0.2,0.000000001,"fitfunction xe^{#frac{-x}{0.2}}");
   
   hNPi0_gen_pt->SetXTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_gen_pt->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_gen_pt->SetYTitle("#it{relative probability}");
   hNPi0_gen_pt->GetYaxis()->SetTitleOffset(1.4);
   
-  TLegend *leg_pt = new TLegend(0.5,0.75,0.9,0.95);
+  TLegend *leg_pt = new TLegend(0.4,0.75,0.9,0.95);
   leg_pt->SetFillStyle(0);
   leg_pt->SetBorderSize(0);
   leg_pt->SetTextFont(43);
-  leg_pt->SetTextSize(25);
+  leg_pt->SetTextSize(30);
   leg_pt->AddEntry(hNPi0_gen_pt, "reconstructed #it{p}_{T} spectrum", "p");
   leg_pt->AddEntry(hNPi0_acc_90, "90#circ detector #it{p}_{T} spectrum", "p");
   leg_pt->AddEntry(hNPi0_acc_60, "60#circ detector #it{p}_{T} spectrum", "p");
-  leg_pt->AddEntry(fpt, "param: x*exp(-x/0.2)", "l");
   leg_pt->Draw("same");
   
   
-  //invariante Masse Drawing:
+    //invariante Masse Drawing:
   TGaxis::SetMaxDigits(3); 
   cNPi0_minv->cd();
   cNPi0_minv->SetRightMargin(0.025);
@@ -336,100 +308,45 @@ void Pi0Simulation(TString AddName = "") {
   //pt gegen minv
   //generiertes ohne akzeptanz
   cNPi0_gen_minv_pt->cd();
-  cNPi0_gen_minv_pt->SetRightMargin(0.175);
-  cNPi0_gen_minv_pt->SetBottomMargin(0.125);
-  gPad->SetLogz();
-  hNPi0_gen_minv_pt->Scale(150./(Npi0));
-  hNPi0_gen_minv_pt->GetZaxis()->SetRangeUser(1.e-12,1.);
   
-  hNPi0_gen_minv_pt->SetTitle("");
+  hNPi0_gen_minv_pt->SetTitle("without acceptance");
+  
   hNPi0_gen_minv_pt->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_gen_minv_pt->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_gen_minv_pt->SetYTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_gen_minv_pt->GetYaxis()->SetTitleOffset(1.4);
-  hNPi0_gen_minv_pt->SetZTitle("#it{relative probability}");
-  hNPi0_gen_minv_pt->GetZaxis()->SetTitleOffset(1.4);
   hNPi0_gen_minv_pt->Draw("colz");
   
   //mit Akzeptanz von 90 Grad
   cNPi0_acc_minv_pt_90->cd();
-  cNPi0_acc_minv_pt_90->SetRightMargin(0.175);
-  cNPi0_acc_minv_pt_90->SetBottomMargin(0.125);
-  gPad->SetLogz();
-  hNPi0_acc_minv_pt_90->Scale(150./(Npi0));
-  hNPi0_acc_minv_pt_90->GetZaxis()->SetRangeUser(1.e-12,1.);
   
-  hNPi0_acc_minv_pt_90->SetTitle("");
   
-
+  hNPi0_acc_minv_pt_90->SetTitle("90 Degree acceptance");
+  
+  //hNPi0_acc_minv_pt_90->SetTickLength(0.2);
+  
   hNPi0_acc_minv_pt_90->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_acc_minv_pt_90->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_90->SetYTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_acc_minv_pt_90->GetYaxis()->SetTitleOffset(1.4);
-  hNPi0_acc_minv_pt_90->SetZTitle("#it{relative probability}");
-  hNPi0_acc_minv_pt_90->GetZaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_90->Draw("colz");
   
   //mit Akzeptanz von 60 Grad
   cNPi0_acc_minv_pt_60->cd();
-  cNPi0_acc_minv_pt_60->SetRightMargin(0.175);
-  cNPi0_acc_minv_pt_60->SetBottomMargin(0.125);
-  gPad->SetLogz();
-  hNPi0_acc_minv_pt_60->Scale(150./(Npi0));
-  hNPi0_acc_minv_pt_60->GetZaxis()->SetRangeUser(1.e-12,1.);
   
-  hNPi0_acc_minv_pt_60->SetTitle("");
+  hNPi0_acc_minv_pt_60->SetTitle("60 Degree acceptance");
   
   hNPi0_acc_minv_pt_60->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_acc_minv_pt_60->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_60->SetYTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_acc_minv_pt_60->GetYaxis()->SetTitleOffset(1.4);
-  hNPi0_acc_minv_pt_60->SetZTitle("#it{relative probability}");
-  hNPi0_acc_minv_pt_60->GetZaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_60->Draw("colz");
   
-  
-  //minv vergleich bei verschiedenen pt's 
-  cNPi0_acc_minv_comp->cd();
-  cNPi0_acc_minv_comp->SetTopMargin(0.05);
-  cNPi0_acc_minv_comp->SetRightMargin(0.05);
-  
-  
-  hNPi0_acc_minv_high_pt->SetLineColor(kRed);
-  hNPi0_acc_minv_low_pt->SetLineColor(kBlue);
-  hNPi0_acc_minv_mid_pt->SetLineColor(kGreen+2);
-  hNPi0_acc_minv_high_pt->SetTitle("");
-  hNPi0_acc_minv_high_pt->SetLineWidth(2);
-  hNPi0_acc_minv_mid_pt->SetLineWidth(2);
-  hNPi0_acc_minv_low_pt->SetLineWidth(2);
-  
-  hNPi0_acc_minv_high_pt->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
-  hNPi0_acc_minv_high_pt->GetXaxis()->SetTitleOffset(1.4);
-  hNPi0_acc_minv_high_pt->SetYTitle("#it{counts}");
-  hNPi0_acc_minv_high_pt->GetYaxis()->SetTitleOffset(1.4);
-  
-  TLegend *leg_minv_comp = new TLegend(0.37,0.5,0.9,0.9);
-  leg_minv_comp->SetFillStyle(0);
-  leg_minv_comp->SetBorderSize(0);
-  leg_minv_comp->SetTextFont(43);
-  leg_minv_comp->SetTextSize(20);
-  leg_minv_comp->AddEntry(hNPi0_acc_minv_high_pt, "#splitline{#it{m}_{inv} spectrum}{for 3.32GeV/#it{c} < #it{p}_{T} <= 5GeV/#it{c}}", "l");
-  leg_minv_comp->AddEntry(hNPi0_acc_minv_mid_pt, "#splitline{#it{m}_{inv} spectrum}{for 1.66GeV/#it{c} < #it{p}_{T} <= 3.32GeV/#it{c}}", "l");
-  leg_minv_comp->AddEntry(hNPi0_acc_minv_low_pt, "#splitline{#it{m}_{inv} spectrum}{for 0GeV/#it{c} < #it{p}_{T} <= 1.66GeV/#it{c}}", "l");
-  
-  hNPi0_acc_minv_high_pt->Draw("");
-  hNPi0_acc_minv_mid_pt->Draw("same");
-  hNPi0_acc_minv_low_pt->Draw("same");
-  leg_minv_comp->Draw("same");
-  
-  
-  
-  cNPi0_pt->SaveAs(Form("Simulation/TransversalImpuls%s.pdf", AddName.Data()));
-  cNPi0_minv->SaveAs(Form("Simulation/InvarianteMasse%s.pdf", AddName.Data()));
-  cNPi0_gen_minv_pt->SaveAs(Form("Simulation/InvarianteMasseTransversalImpulsSignal%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls90Grad%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls60Grad%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_comp->SaveAs(Form("Simulation/IvanrianteMasseVergleich%s.pdf", AddName.Data()));
+  cNPi0_pt->SaveAs(Form("Simulation2/TransversalImpuls%s.pdf", AddName.Data()));
+  cNPi0_minv->SaveAs(Form("Simulation2/InvarianteMasse%s.pdf", AddName.Data()));
+  cNPi0_gen_minv_pt->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpulsSignal%s.pdf", AddName.Data()));
+  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls90Grad%s.pdf", AddName.Data()));
+  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls60Grad%s.pdf", AddName.Data()));
   
   cout << endl;
 }

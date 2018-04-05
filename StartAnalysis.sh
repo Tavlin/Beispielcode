@@ -74,7 +74,9 @@ if [ $DoToyMC = 1 ] ; then
   echo "";
   echo "Starte Pi0Simulation.C...";
   mkdir -p Simulation  #Neuer Ordner
+  mkdir -p Simulation2
   root -q -l -b Pi0Simulation.C\+\(\)
+  #root -q -l -b Tset.C\+\(\)
   # Hier wird ein C++ Macro in root aufgerufen
   # Das + bedeutet, dass wir den code kompilieren wollen (.C+),
   #         die \ werden nur verwendet, da einige symbole in bash

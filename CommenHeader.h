@@ -116,7 +116,7 @@ void SetCanvasStandardSettings(TCanvas *cCanv){
   gStyle->SetOptStat(0); // <- das hier macht dies box rechts oben weg
   cCanv->SetTopMargin(0.025);
   cCanv->SetBottomMargin(0.15);
-  cCanv->SetRightMargin(0.05);
+  cCanv->SetRightMargin(0.15);
   cCanv->SetLeftMargin(0.15);
   cCanv->SetTickx();
   cCanv->SetTicky();
