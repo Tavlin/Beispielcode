@@ -3,23 +3,23 @@
 void Pi0Simulation(TString AddName = "") {
 
   // Wir definieren ein Canvas auf das wir malen können
-  TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",800,800);
+  TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",1200,1200);
   // Wir stellen ein paar grundlegende Settings ein
   SetCanvasStandardSettings(cNPi0_pt);// (diese Funktion ist in ExtractSignal.h definiert)
 
-  TCanvas *cNPi0_minv = new TCanvas("cNPi0_minv","",800,800);
+  TCanvas *cNPi0_minv = new TCanvas("cNPi0_minv","",1200,1200);
   SetCanvasStandardSettings(cNPi0_minv);
   
-  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",800,800);
+  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",1200,1200);
   SetCanvasStandardSettings(cNPi0_gen_minv_pt);
   
-  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",800,800);
+  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",1200,1200);
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_60);
   
-  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",800,800);
+  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",1200,1200);
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
   
-  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",800,800);
+  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",1200,1200);
   SetCanvasStandardSettings(cNPi0_acc_minv_comp);
   
   Float_t m = 0.135; // pi0 mass
@@ -317,8 +317,8 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_60->SetLineColor(kBlue);
   hNPi0_acc_minv_90->SetLineColor(kGreen+2);
   hNPi0_acc_minv_90->SetTitle("");
-  hNPi0_acc_minv_60->SetLineWidth(2);
-  hNPi0_acc_minv_90->SetLineWidth(2);
+  hNPi0_acc_minv_60->SetLineWidth(4);
+  hNPi0_acc_minv_90->SetLineWidth(4);
   
   TLegend *leg_minv = new TLegend(0.5,0.75,0.9,0.95);
   leg_minv->SetFillStyle(0);
@@ -399,9 +399,9 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_low_pt->SetLineColor(kBlue);
   hNPi0_acc_minv_mid_pt->SetLineColor(kGreen+2);
   hNPi0_acc_minv_high_pt->SetTitle("");
-  hNPi0_acc_minv_high_pt->SetLineWidth(2);
-  hNPi0_acc_minv_mid_pt->SetLineWidth(2);
-  hNPi0_acc_minv_low_pt->SetLineWidth(2);
+  hNPi0_acc_minv_high_pt->SetLineWidth(4);
+  hNPi0_acc_minv_mid_pt->SetLineWidth(4);
+  hNPi0_acc_minv_low_pt->SetLineWidth(4);
   
   hNPi0_acc_minv_high_pt->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_acc_minv_high_pt->GetXaxis()->SetTitleOffset(1.4);
@@ -424,12 +424,12 @@ void Pi0Simulation(TString AddName = "") {
   
   
   
-  cNPi0_pt->SaveAs(Form("Simulation/TransversalImpuls%s.pdf", AddName.Data()));
-  cNPi0_minv->SaveAs(Form("Simulation/InvarianteMasse%s.pdf", AddName.Data()));
-  cNPi0_gen_minv_pt->SaveAs(Form("Simulation/InvarianteMasseTransversalImpulsSignal%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls90Grad%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls60Grad%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_comp->SaveAs(Form("Simulation/IvanrianteMasseVergleich%s.pdf", AddName.Data()));
+  cNPi0_pt->SaveAs(Form("Simulation/TransversalImpuls%s.png", AddName.Data()));
+  cNPi0_minv->SaveAs(Form("Simulation/InvarianteMasse%s.png", AddName.Data()));
+  cNPi0_gen_minv_pt->SaveAs(Form("Simulation/InvarianteMasseTransversalImpulsSignal%s.png", AddName.Data()));
+  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls90Grad%s.png", AddName.Data()));
+  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls60Grad%s.png", AddName.Data()));
+  cNPi0_acc_minv_comp->SaveAs(Form("Simulation/IvanrianteMasseVergleich%s.png", AddName.Data()));
   
   cout << endl;
 }
