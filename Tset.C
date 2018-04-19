@@ -342,11 +342,11 @@ void Tset(TString AddName = "") {
   hNPi0_acc_minv_pt_60->GetYaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_pt_60->Draw("colz");
   
-  cNPi0_pt->SaveAs(Form("Simulation2/TransversalImpuls%s.pdf", AddName.Data()));
-  cNPi0_minv->SaveAs(Form("Simulation2/InvarianteMasse%s.pdf", AddName.Data()));
-  cNPi0_gen_minv_pt->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpulsSignal%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls90Grad%s.pdf", AddName.Data()));
-  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls60Grad%s.pdf", AddName.Data()));
+  cNPi0_pt->SaveAs(Form("Simulation2/TransversalImpuls%s.png", AddName.Data()));
+  cNPi0_minv->SaveAs(Form("Simulation2/InvarianteMasse%s.png", AddName.Data()));
+  cNPi0_gen_minv_pt->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpulsSignal%s.png", AddName.Data()));
+  cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls90Grad%s.png", AddName.Data()));
+  cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation2/InvarianteMasseTransversalImpuls60Grad%s.png", AddName.Data()));
   
   cout << endl;
 }

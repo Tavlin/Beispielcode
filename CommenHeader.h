@@ -20,13 +20,13 @@ const Int_t kMaxHit = 2000;
 
 
 Float_t fCalcInvMass(Float_t px1, Float_t py1, Float_t pz1, Float_t px2, Float_t py2, Float_t pz2, Float_t e_gamma_1, Float_t e_gamma_2){
-  
-  
+
+
   return sqrt(2.*e_gamma_1*e_gamma_2*(1.-(px1*px2+py1*py2+pz1*pz2)/(sqrt(px1*px1+py1*py1+pz1*pz1)*sqrt(px2*px2+py2*py2+pz2*pz2))));
 }
 
 Float_t fEnergySmear(Float_t energy){
-  
+
   return gRandom->Gaus(energy,0.03/sqrt(energy));
 }
 
@@ -38,12 +38,12 @@ Float_t fCalcPT(Float_t e_lab, Float_t m, Float_t y_lab){
 Bool_t fCheckAcc(Float_t phi1, Float_t phi2, Float_t eta1, Float_t eta2, Float_t phi_detec){
     if (fabs(phi1)<= phi_detec  && fabs(phi2)<=phi_detec){
       if (fabs(eta1) < 0.5 && fabs(eta2) < 0.5){
-           
+
         return true;
       }
     }
     return false;
-}   
+}
 
 
 void RotateToLabSystem(const float& theta, const float& phi,
@@ -136,13 +136,14 @@ void SetHistoStandardSettings(TH1* histo, Double_t XOffset = 1.2, Double_t YOffs
   histo->GetYaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetTitleFont(43);
   histo->GetXaxis()->SetTitleFont(43);
+  histo->Sumw2();
 
-  
+
 
 
   histo->SetMarkerStyle(20);
   histo->SetMarkerSize(1.5);
-  histo->SetLineWidth(1.5);
+  histo->SetLineWidth(2);
   histo->SetLineColor(kBlack);
   histo->SetMarkerColor(kBlack);
 }
