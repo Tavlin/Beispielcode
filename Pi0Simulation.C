@@ -1,6 +1,17 @@
 #include "CommenHeader.h"
 
+
+Float_t xbins_pt[nbins_pt+1];
+
 void Pi0Simulation(TString AddName = "") {
+  for (size_t j = 0; j < 62; j++) {
+    xbins_pt[j] = j*0.1;
+  }
+  xbins_pt[62] = 6.2;
+  xbins_pt[63] = 6.5;
+  xbins_pt[64] = 7;
+  xbins_pt[65] = 7.9;
+  xbins_pt[66] = 10;
 
   // Wir definieren ein Canvas auf das wir malen können
   TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",1200,1200);
@@ -9,7 +20,6 @@ void Pi0Simulation(TString AddName = "") {
 
   TCanvas *cNPi0_minv = new TCanvas("cNPi0_minv","",1200,1200);
   SetCanvasStandardSettings(cNPi0_minv);
-<<<<<<< HEAD
 
   TCanvas *cNPi0_theta_pt = new TCanvas("cNPi0_theta_pt","",800,800);
   SetCanvasStandardSettings(cNPi0_theta_pt);
@@ -30,25 +40,12 @@ void Pi0Simulation(TString AddName = "") {
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
 
   TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",800,800);
-=======
-  
-  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",1200,1200);
-  SetCanvasStandardSettings(cNPi0_gen_minv_pt);
-  
-  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",1200,1200);
-  SetCanvasStandardSettings(cNPi0_acc_minv_pt_60);
-  
-  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",1200,1200);
-  SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
-  
-  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",1200,1200);
->>>>>>> 7c4ffc81471a9cf7c91efae1abfcaa6c4570a95f
-  SetCanvasStandardSettings(cNPi0_acc_minv_comp);
+
 
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 1000000;
+  const Int_t Npi0 = 100000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -57,9 +54,8 @@ void Pi0Simulation(TString AddName = "") {
   TF1* fy = new TF1("fy", "gaus", -0.5, 0.5);
   fy->SetParameters(1., 0., 4.);
 
-
   // histograms for generated and accepted pi0's
-  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",150,0.,5.); //edit mehr und nur bis 5 statt 20,0.,10.
+  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",nbins_pt,xbins_pt); //edit mehr und nur bis 5 statt 20,0.,10.
   SetHistoStandardSettings(hNPi0_gen_pt);
 
   TH1F* hNPi0_gen_minv = new TH1F("hNPi0_gen_minv","generated pi0 minv spectrum",100,0.,0.5);
@@ -82,11 +78,11 @@ void Pi0Simulation(TString AddName = "") {
   SetHistoStandardSettings2(hNPi0_acc_minv_pt_90);
 
   // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 60º)
-  TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",100,0.,5.);
+  TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",nbins_pt,xbins_pt);
   SetHistoStandardSettings(hNPi0_acc_60);
 
   // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
-  TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",100,0.,5.);
+  TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",nbins_pt,xbins_pt);
   SetHistoStandardSettings(hNPi0_acc_90);
 
   TH1F* hNPi0_acc_minv_high_pt = new TH1F("hNPi0_acc_minv_high_pt","accepted pi0 minv spectrum",100,0.,0.5);
@@ -424,16 +420,13 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_60->SetLineColor(kBlue);
   hNPi0_acc_minv_90->SetLineColor(kGreen+2);
   hNPi0_acc_minv_90->SetTitle("");
-<<<<<<< HEAD
   hNPi0_acc_minv_60->SetLineWidth(3);
   hNPi0_acc_minv_90->SetLineWidth(3);
 
 
-=======
   hNPi0_acc_minv_60->SetLineWidth(4);
   hNPi0_acc_minv_90->SetLineWidth(4);
-  
->>>>>>> 7c4ffc81471a9cf7c91efae1abfcaa6c4570a95f
+
   TLegend *leg_minv = new TLegend(0.5,0.75,0.9,0.95);
   leg_minv->SetFillStyle(0);
   leg_minv->SetBorderSize(0);
@@ -513,17 +506,14 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_low_pt->SetLineColor(kBlue);
   hNPi0_acc_minv_mid_pt->SetLineColor(kGreen+2);
   hNPi0_acc_minv_high_pt->SetTitle("");
-<<<<<<< HEAD
   hNPi0_acc_minv_high_pt->SetLineWidth(2);
   hNPi0_acc_minv_mid_pt->SetLineWidth(2);
   hNPi0_acc_minv_low_pt->SetLineWidth(2);
 
-=======
   hNPi0_acc_minv_high_pt->SetLineWidth(4);
   hNPi0_acc_minv_mid_pt->SetLineWidth(4);
   hNPi0_acc_minv_low_pt->SetLineWidth(4);
-  
->>>>>>> 7c4ffc81471a9cf7c91efae1abfcaa6c4570a95f
+
   hNPi0_acc_minv_high_pt->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
   hNPi0_acc_minv_high_pt->GetXaxis()->SetTitleOffset(1.4);
   hNPi0_acc_minv_high_pt->SetYTitle("#it{counts}");
@@ -542,24 +532,21 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_minv_mid_pt->Draw("same");
   hNPi0_acc_minv_low_pt->Draw("same");
   leg_minv_comp->Draw("same");
-<<<<<<< HEAD
 
 
 
-=======
-  
-  
-  
->>>>>>> 7c4ffc81471a9cf7c91efae1abfcaa6c4570a95f
+
   cNPi0_pt->SaveAs(Form("Simulation/TransversalImpuls%s.png", AddName.Data()));
   cNPi0_minv->SaveAs(Form("Simulation/InvarianteMasse%s.png", AddName.Data()));
   cNPi0_gen_minv_pt->SaveAs(Form("Simulation/InvarianteMasseTransversalImpulsSignal%s.png", AddName.Data()));
   cNPi0_acc_minv_pt_90->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls90Grad%s.png", AddName.Data()));
   cNPi0_acc_minv_pt_60->SaveAs(Form("Simulation/InvarianteMasseTransversalImpuls60Grad%s.png", AddName.Data()));
   cNPi0_acc_minv_comp->SaveAs(Form("Simulation/IvanrianteMasseVergleich%s.png", AddName.Data()));
-<<<<<<< HEAD
   cNPi0_theta_pt->SaveAs(Form("Simulation/Theta_PT%s.png", AddName.Data()));
   cNPi0_costheta_pt->SaveAs(Form("Simulation/CosTheta_PT%s.png", AddName.Data()));
+  hNPi0_gen_pt->SaveAs(Form("pi0ptSpectrum4pi%s.root", AddName.Data()));
+  hNPi0_acc_90->SaveAs(Form("pi0ptSpectrum90Grad%s.root", AddName.Data()));
+  hNPi0_acc_60->SaveAs(Form("pi0ptSpectrum60Grad%s.root", AddName.Data()));
 
 
   cE1E2->cd();
@@ -590,9 +577,5 @@ void Pi0Simulation(TString AddName = "") {
   cE1E2->Clear();
   hE1E2_cosTheta->Delete();
 
-
-=======
-  
->>>>>>> 7c4ffc81471a9cf7c91efae1abfcaa6c4570a95f
   cout << endl;
 }

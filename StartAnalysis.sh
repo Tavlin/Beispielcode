@@ -76,6 +76,10 @@ if [ $DoToyMC = 1 ] ; then
   mkdir -p Simulation  #Neuer Ordner
   mkdir -p Simulation2
   root -q -l -b Pi0Simulation.C\+\(\)
+  cd ..
+  rm -r Simulation3/
+  mv  Beispielcode/Simulation/ Simulation3/
+  cd Beispielcode
   #root -q -l -b Tset.C\+\(\)
   # Hier wird ein C++ Macro in root aufgerufen
   # Das + bedeutet, dass wir den code kompilieren wollen (.C+),

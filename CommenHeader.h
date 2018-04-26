@@ -12,12 +12,27 @@
 #include "TH1D.h"
 #include "TH2F.h"
 #include "TTree.h"
+#include "TGraph.h"
 #include "TRandom.h"
+#include "TFitResult.h"
 #include <TSystem.h>
 #include <iostream>
+#include <string>
 
 const Int_t kMaxHit = 2000;
+extern const Int_t nbins_pt = 66;
+extern Float_t xbins_pt[nbins_pt+1];
 
+void something(){
+for (size_t j = 0; j < 62; j++) {
+  xbins_pt[j] = j*0.1;
+}
+xbins_pt[62] = 6.2;
+xbins_pt[63] = 6.5;
+xbins_pt[64] = 7;
+xbins_pt[65] = 7.9;
+xbins_pt[66] = 10;
+}
 
 Float_t fCalcInvMass(Float_t px1, Float_t py1, Float_t pz1, Float_t px2, Float_t py2, Float_t pz2, Float_t e_gamma_1, Float_t e_gamma_2){
 
