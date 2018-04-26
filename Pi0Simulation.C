@@ -45,7 +45,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 100000;
+  const Int_t Npi0 = 10000000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -116,7 +116,7 @@ void Pi0Simulation(TString AddName = "") {
     Float_t pi = TMath::Pi(); /* besser vor dem loop? */
 
     // set pT, rapidity, ...
-    Float_t pt_lab = gRandom->Uniform(7.);
+    Float_t pt_lab = gRandom->Uniform(10.);
     Float_t phi_lab = gRandom->Uniform(2.*pi);
     Float_t y_lab = fy->GetRandom();
 
@@ -300,10 +300,6 @@ void Pi0Simulation(TString AddName = "") {
 
   }
 
-
-  //Correct Bin with for normalization still missing!!!!!!
-
-
   cNPi0_theta_pt->cd();
 
   cNPi0_theta_pt->SetRightMargin(0.175);
@@ -367,13 +363,23 @@ void Pi0Simulation(TString AddName = "") {
 
 
   //achte auf Reihenfolge weil es die Farbe einfach DRUEBER malt!
-  hNPi0_gen_pt->Scale(150./(Npi0));
-  hNPi0_acc_90->Scale(150./(Npi0));
-  hNPi0_acc_60->Scale(150./(Npi0));
+  hNPi0_gen_pt->Scale(10./(Npi0),"width");
+  hNPi0_acc_90->Scale(10./(Npi0),"width");
+  hNPi0_acc_60->Scale(10./(Npi0),"width");
+  // for (size_t i = 0; i < nbins_pt; i++) {
+  //   hNPi0_gen_pt->SetBinContent(i+1,hNPi0_gen_pt->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  //   hNPi0_acc_90->SetBinContent(i+1,hNPi0_acc_90->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  //   hNPi0_acc_60->SetBinContent(i+1,hNPi0_acc_60->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  //   hNPi0_gen_pt->SetBinError(i+1,hNPi0_gen_pt->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  //   hNPi0_acc_90->SetBinError(i+1,hNPi0_acc_90->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  //   hNPi0_acc_60->SetBinError(i+1,hNPi0_acc_60->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
+  // }
+
   hNPi0_gen_pt->Draw("pe");
   hNPi0_acc_90->Draw("pe,same");
   hNPi0_acc_60->Draw("pe,same");
   fpt->Draw("same");
+  hNPi0_gen_pt->GetYaxis()->SetRangeUser(10e-19,1.);
   cout << "Fehler vom 5 Bin bei 90 Grad Detektor " << hNPi0_acc_90->GetBinError(5)/hNPi0_acc_90->GetBinContent(5) << endl;
   cout << "Fehler vom 90 Bin bei 90 Grad Detektor  " << hNPi0_acc_90->GetBinError(90)/hNPi0_acc_90->GetBinContent(90) << endl;
   cout << "Content vom 90 Bin bei 90 Grad Detektor  " << hNPi0_acc_90->GetBinContent(90) << endl;
@@ -547,9 +553,19 @@ void Pi0Simulation(TString AddName = "") {
   cNPi0_acc_minv_comp->SaveAs(Form("Simulation/IvanrianteMasseVergleich%s.png", AddName.Data()));
   cNPi0_theta_pt->SaveAs(Form("Simulation/Theta_PT%s.png", AddName.Data()));
   cNPi0_costheta_pt->SaveAs(Form("Simulation/CosTheta_PT%s.png", AddName.Data()));
-  hNPi0_gen_pt->SaveAs(Form("pi0ptSpectrum4pi%s.root", AddName.Data()));
-  hNPi0_acc_90->SaveAs(Form("pi0ptSpectrum90Grad%s.root", AddName.Data()));
-  hNPi0_acc_60->SaveAs(Form("pi0ptSpectrum60Grad%s.root", AddName.Data()));
+
+  TFile* pTSpectra = new TFile("pTSpectra.root", "RECREATE");
+  //Lese und speichere in Datei namens HistoFile.root
+  //if ( HistoWOBackground_file->IsOpen() ) printf("HistoWOBackground_file opened successfully\n");
+
+  hNPi0_gen_pt->Write(Form("hNPi0_gen_pt"));
+  hNPi0_acc_90->Write(Form("hNPi0_acc_90"));
+  hNPi0_acc_60->Write(Form("hNPi0_acc_60"));
+
+
+  // schliesse datei #sauberes Programmieren
+  pTSpectra->Close();
+  cout << "finished! :)" << endl;
 
 
   cE1E2->cd();
