@@ -69,12 +69,12 @@ void Pi0Simulation(TString AddName = "") {
   SetHistoStandardSettings2(hNPi0_acc_minv_pt_90);
 
   // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 60º)
-  TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",nbins_pt,xbins_pt);
-  SetHistoStandardSettings(hNPi0_acc_60);
-
-  // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
-  TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",nbins_pt,xbins_pt);
-  SetHistoStandardSettings(hNPi0_acc_90);
+  // TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",nbins_pt,xbins_pt);
+  // SetHistoStandardSettings(hNPi0_acc_60);
+  //
+  // // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
+  // TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",nbins_pt,xbins_pt);
+  // SetHistoStandardSettings(hNPi0_acc_90);
 
   TH1F* hNPi0_acc_minv_high_pt = new TH1F("hNPi0_acc_minv_high_pt","accepted pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_acc_minv_high_pt);
