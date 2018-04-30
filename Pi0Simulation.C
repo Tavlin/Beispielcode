@@ -1,17 +1,8 @@
-#include "CommenHeader.h"
+#include "/u/mhemmer/Documents/git/Beispielcode2/CommenHeader.h"
 
-
-Float_t xbins_pt[nbins_pt+1];
 
 void Pi0Simulation(TString AddName = "") {
-  for (size_t j = 0; j < 62; j++) {
-    xbins_pt[j] = j*0.1;
-  }
-  xbins_pt[62] = 6.2;
-  xbins_pt[63] = 6.5;
-  xbins_pt[64] = 7;
-  xbins_pt[65] = 7.9;
-  xbins_pt[66] = 10;
+
 
   // Wir definieren ein Canvas auf das wir malen können
   TCanvas *cNPi0_pt = new TCanvas("cNPi0_pt","",1200,1200);
@@ -55,8 +46,8 @@ void Pi0Simulation(TString AddName = "") {
   fy->SetParameters(1., 0., 4.);
 
   // histograms for generated and accepted pi0's
-  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",nbins_pt,xbins_pt); //edit mehr und nur bis 5 statt 20,0.,10.
-  SetHistoStandardSettings(hNPi0_gen_pt);
+  // TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",nbins_pt,xbins_pt); //edit mehr und nur bis 5 statt 20,0.,10.
+  // SetHistoStandardSettings(hNPi0_gen_pt);
 
   TH1F* hNPi0_gen_minv = new TH1F("hNPi0_gen_minv","generated pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_gen_minv);
