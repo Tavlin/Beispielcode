@@ -57,11 +57,14 @@ void Pi0Simulation(TString AddName = "") {
 
   TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",800,800);
 
+  TCanvas *cNPi0_pt_500event = new TCanvas("cNPi0_pt_500event","",1200,1200);
+  SetCanvasStandardSettings(cNPi0_pt_500event);
+
 
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 10000000;
+  const Int_t Npi0 = 1000000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -83,6 +86,8 @@ void Pi0Simulation(TString AddName = "") {
   TH1F* hNPi0_acc_minv_90 = new TH1F("hNPi0_acc_minv_90","accepted pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_acc_minv_90);
 
+  TH1F* hNPi0_pt_500event = new TH1F("hNPi0_pt_500event","Vergleichsspektrum für 500Event Simulation",nbins_pt-1,xbins_pt);
+  SetHistoStandardSettings(hNPi0_pt_500event);
 
   TH2F* hNPi0_gen_minv_pt = new TH2F("hNPi0_gen_minv_pt","generated pi0: minv vs. pT",100,0.,1.,100,0.,7.);
   SetHistoStandardSettings2(hNPi0_gen_minv_pt);
@@ -244,6 +249,11 @@ void Pi0Simulation(TString AddName = "") {
       hNPi0_acc_90->Fill(pt_lab, fpt->Eval(pt_lab));
     }
 
+    // 2pi Detektor aus 500 Event Analyse für Ratio:
+    if(fCheckAcc(phi1, phi2, eta1, eta2, 2.*pi)){
+      hNPi0_pt_500event->Fill(pt_lab, fpt->Eval(pt_lab));
+    }
+
     hNPi0_gen_minv->Fill(minv);
 
     ///////////////////////////////////////////////
@@ -257,6 +267,7 @@ void Pi0Simulation(TString AddName = "") {
     if(fCheckAcc(phi1, phi2, eta1, eta2, pi/2.)){
       hNPi0_acc_minv_90->Fill(minv);
     }
+
 
     /////////////////////////////////////////////
     //minv vs pt
@@ -375,6 +386,11 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_90->SetMarkerStyle(33);
   hNPi0_acc_90->SetMarkerSize(1.5); //1.5
 
+  hNPi0_pt_500event->SetLineColor(kOrange+2);
+  hNPi0_pt_500event->SetMarkerColor(kOrange+2);
+  hNPi0_pt_500event->SetMarkerStyle(24);
+  hNPi0_pt_500event->SetMarkerSize(1.5);
+
   hNPi0_gen_pt->SetTitle("");
 
 
@@ -382,18 +398,12 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_gen_pt->Scale(10./(Npi0),"width");
   hNPi0_acc_90->Scale(10./(Npi0),"width");
   hNPi0_acc_60->Scale(10./(Npi0),"width");
-  // for (size_t i = 0; i < nbins_pt; i++) {
-  //   hNPi0_gen_pt->SetBinContent(i+1,hNPi0_gen_pt->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  //   hNPi0_acc_90->SetBinContent(i+1,hNPi0_acc_90->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  //   hNPi0_acc_60->SetBinContent(i+1,hNPi0_acc_60->GetBinContent(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  //   hNPi0_gen_pt->SetBinError(i+1,hNPi0_gen_pt->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  //   hNPi0_acc_90->SetBinError(i+1,hNPi0_acc_90->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  //   hNPi0_acc_60->SetBinError(i+1,hNPi0_acc_60->GetBinError(i+1)*10/(Npi0*hNPi0_gen_pt->GetBinWidth(i+1)));
-  // }
+  hNPi0_pt_500event->Scale(10./(Npi0),"width");
 
   hNPi0_gen_pt->Draw("pe");
   hNPi0_acc_90->Draw("pe,same");
   hNPi0_acc_60->Draw("pe,same");
+  hNPi0_pt_500event->Draw("pe,same");
   fpt->Draw("same");
   hNPi0_gen_pt->GetYaxis()->SetRangeUser(10e-19,1.);
 
@@ -416,6 +426,7 @@ void Pi0Simulation(TString AddName = "") {
   leg_pt->AddEntry(hNPi0_gen_pt, "reconstructed #it{p}_{T} spectrum", "p");
   leg_pt->AddEntry(hNPi0_acc_90, "90#circ detector #it{p}_{T} spectrum", "p");
   leg_pt->AddEntry(hNPi0_acc_60, "60#circ detector #it{p}_{T} spectrum", "p");
+  leg_pt->AddEntry(hNPi0_pt_500event, "500 events simulation detector #it{p}_{T} spectrum", "p");
   leg_pt->AddEntry(fpt, "param: x*exp(-x/0.2)", "l");
   leg_pt->Draw("same");
 
@@ -574,6 +585,22 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_gen_pt->Write(Form("hNPi0_gen_pt"));
   hNPi0_acc_90->Write(Form("hNPi0_acc_90"));
   hNPi0_acc_60->Write(Form("hNPi0_acc_60"));
+  hNPi0_pt_500event->Write(Form("hNPi0_pt_500event"));
+
+  //make ratio plot:
+  TH1F *hgen_500event_ratio = (TH1F*)hNPi0_gen_pt->Clone("hgen_500event_ratio");
+  hgen_500event_ratio->Divide(hNPi0_pt_500event);
+
+
+  cNPi0_pt->cd();
+  cNPi0_pt->Clear();
+  hgen_500event_ratio->GetYaxis()->SetRangeUser(1.e0,1.e1);
+  hgen_500event_ratio->SetTitle("");
+  hgen_500event_ratio->Draw();
+  hgen_500event_ratio->Write(Form("hgen_500event_ratio"));
+  cNPi0_pt->SaveAs(Form("Simulation/RatioOfGenOver500Event%s.png", AddName.Data()));
+
+
 
 
   // schliesse datei #sauberes Programmieren
@@ -584,11 +611,11 @@ void Pi0Simulation(TString AddName = "") {
   cE1E2->cd();
   gPad->SetLogz();
   hE1E2_minv->Scale(150./(Npi0));
-  hE1E2_minv->GetZaxis()->SetRangeUser(1.e-3,1.e2);
+  hE1E2_minv->GetZaxis()->SetRangeUser(1.e-12,1.e2);
   hE1E2_minv->SetZTitle("");
   hE1E2_minv->Draw("colz");
   hE1E2_minv->Scale(150./(Npi0));
-  hE1E2_minv->GetZaxis()->SetRangeUser(1.e-3,1.e2);
+  hE1E2_minv->GetZaxis()->SetRangeUser(1.e-12,1.e2);
   cE1E2->SaveAs(Form("Simulation/E_minv%s.png", AddName.Data()));
   cE1E2->Clear();
   hE1E2_minv->Delete();
