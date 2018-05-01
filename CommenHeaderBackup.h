@@ -22,29 +22,19 @@
 #include <string>
 #include <vector>
 
-
 const Int_t kMaxHit = 2000;
+const Int_t nbins_pt = 66;
+Float_t xbins_pt[nbins_pt+1];
 
-Double_t* GetBinningFromHistogram(TH1D* hist)
-{
-  if(!hist) return 0;
-  TArrayD* dArray = (TArrayD*)hist->GetXaxis()->GetXbins();
-  return dArray->GetArray();
+void something(){
+for (size_t j = 0; j < 62; j++) {
+  xbins_pt[j] = j*0.1;
 }
-
-Int_t GetNBinningFromHistogram(TH1D* hist)
-{
-  if(!hist) return 0;
-  TArrayD* dArray = (TArrayD*)hist->GetXaxis()->GetXbins();
-  return dArray->GetSize();
-}
-
-Float_t fCalcInvMass(Float_t px1, Float_t py1, Float_t pz1, Float_t px2, Float_t py2, Float_t pz2){
-  return sqrt(2.*(sqrt(px1*px1+py1*py1+pz1*pz1)*sqrt(px2*px2+py2*py2+pz2*pz2)-(px1*px2+py1*py2+pz1*pz2)));
-}
-
-Float_t fCalcPT(Float_t px1, Float_t py1, Float_t px2, Float_t py2){
-  return sqrt((px1+px2)*(px1+px2)+(py1+py2)*(py1+py2));
+xbins_pt[62] = 6.2;
+xbins_pt[63] = 6.5;
+xbins_pt[64] = 7;
+xbins_pt[65] = 7.9;
+xbins_pt[66] = 10;
 }
 
 Float_t fCalcInvMass(Float_t px1, Float_t py1, Float_t pz1, Float_t px2, Float_t py2, Float_t pz2, Float_t e_gamma_1, Float_t e_gamma_2){
@@ -72,6 +62,7 @@ Bool_t fCheckAcc(Float_t phi1, Float_t phi2, Float_t eta1, Float_t eta2, Float_t
     }
     return false;
 }
+
 
 void RotateToLabSystem(const float& theta, const float& phi,
 		       const float& p1, const float& p2, const float& p3,
@@ -126,7 +117,7 @@ class DataTree{
       GetEvent(iEvt);
       return pzdata[iHit];
     }
-    Float_t GetClusterID(Int_t iEvt){
+    Float_t GetNCluster(Int_t iEvt){
       GetEvent(iEvt);
       return iNCluster;
     }
@@ -143,11 +134,11 @@ void SetCanvasStandardSettings(TCanvas *cCanv){
   gStyle->SetOptStat(0); // <- das hier macht dies box rechts oben weg
   cCanv->SetTopMargin(0.025);
   cCanv->SetBottomMargin(0.15);
-  cCanv->SetRightMargin(0.05);
+  cCanv->SetRightMargin(0.15);
   cCanv->SetLeftMargin(0.15);
   cCanv->SetTickx();
   cCanv->SetTicky();
-  cCanv->SetLogy(0);
+  cCanv->SetLogy(0); //counts besser log, da sonst nicht anschaulich
   cCanv->SetLogx(0);
 }
 
@@ -155,21 +146,16 @@ void SetCanvasStandardSettings(TCanvas *cCanv){
 void SetHistoStandardSettings(TH1* histo, Double_t XOffset = 1.2, Double_t YOffset = 1.){
   histo->GetXaxis()->SetTitleOffset(XOffset);
   histo->GetYaxis()->SetTitleOffset(YOffset);
-  histo->GetXaxis()->SetTitleSize(45);
-  histo->GetYaxis()->SetTitleSize(45);
-  histo->GetXaxis()->SetLabelSize(45);
-  histo->GetYaxis()->SetLabelSize(45);
+  histo->GetXaxis()->SetTitleSize(30);
+  histo->GetYaxis()->SetTitleSize(30);
+  histo->GetXaxis()->SetLabelSize(30);
+  histo->GetYaxis()->SetLabelSize(30);
   histo->GetXaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetTitleFont(43);
   histo->GetXaxis()->SetTitleFont(43);
-
-  histo->SetTitle("");
-  histo->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
-  histo->GetXaxis()->SetTitleOffset(1.4);
-  histo->SetYTitle("#frac{d#it{N}_{#gamma #gamma}}{d#it{m}_{inv}} (GeV/#it{c}^{2})^{-1}");
-  histo->GetYaxis()->SetTitleOffset(1.4);
   histo->Sumw2();
+
 
 
 
@@ -183,44 +169,32 @@ void SetHistoStandardSettings(TH1* histo, Double_t XOffset = 1.2, Double_t YOffs
 void SetHistoStandardSettings2(TH2* histo, Double_t XOffset = 1.2, Double_t YOffset = 1.){
   histo->GetXaxis()->SetTitleOffset(XOffset);
   histo->GetYaxis()->SetTitleOffset(YOffset);
-  histo->GetXaxis()->SetTitleSize(45);
-  histo->GetYaxis()->SetTitleSize(45);
-  histo->GetXaxis()->SetLabelSize(45);
-  histo->GetYaxis()->SetLabelSize(45);
+  histo->GetXaxis()->SetTitleSize(30);
+  histo->GetYaxis()->SetTitleSize(30);
+  histo->GetZaxis()->SetTitleSize(30);
+  histo->GetXaxis()->SetLabelSize(30);
+  histo->GetYaxis()->SetLabelSize(30);
+  histo->GetZaxis()->SetLabelSize(20);
   histo->GetXaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetLabelFont(43);
+  histo->GetZaxis()->SetLabelFont(43);
   histo->GetYaxis()->SetTitleFont(43);
   histo->GetXaxis()->SetTitleFont(43);
-  histo->Sumw2();
-
-
-  histo->SetTitle("");
-  histo->SetXTitle("#it{m}_{inv} (GeV/#it{c}^{2})");
-  histo->GetXaxis()->SetTitleOffset(1.4);
-  histo->SetYTitle("#it{p}_{T} [GeV/#it{c}]");
-  histo->GetYaxis()->SetTitleOffset(1.4);
-  histo->SetZTitle("#it{counts}");
-  histo->GetZaxis()->SetTitleOffset(1.4);
-  histo->GetZaxis()->SetRangeUser(1.e-10,100.);
-
+  histo->GetZaxis()->SetTitleFont(43);
 }
 
 
 void SetLegendSettigns(TLegend* leg){
-  leg->SetTextFont(42);
-  leg->SetTextSize(0.03);
+  leg->SetTextSize(50);
+  leg->SetTextFont(43);
   leg->SetFillColor(0);
   leg->SetFillStyle(0);
   leg->SetLineWidth(0);
   leg->SetLineColor(0);
   leg->SetMargin(0.15);
-  leg->SetBorderSize(0);
 }
 
-void SetLatexSettings(TLatex* tex){
-  tex->SetTextSize(0.03);
-  tex->SetTextFont(42);
-  }
+
 
 // gStyle->SetCanvasColor(0);
 // gStyle->SetPadColor(0);
@@ -234,6 +208,8 @@ void SetLatexSettings(TLatex* tex){
 // gStyle->SetPadRightMargin(0.1);      // 0.1 = root default
 // gStyle->SetPadTopMargin(0.1);
 // gStyle->SetPadBottomMargin(0.14);
+
+
 
 
 

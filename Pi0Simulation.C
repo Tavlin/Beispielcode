@@ -1,7 +1,32 @@
-#include "/u/mhemmer/Documents/git/Beispielcode2/CommenHeader.h"
+#include "CommenHeader.h"
 
 
 void Pi0Simulation(TString AddName = "") {
+
+  // Auslesen der bins vom pt_Spectrum aus P_TSpectra.root
+  TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
+  if ( P_TSpectra->IsOpen() ) printf("HistoWOBackground_file opened successfully\n");
+
+  if(P_TSpectra->IsZombie()){
+    std::cout << "ERROR: HistoWOBackground_file not found" << std::endl;
+    return;
+  }
+
+  TH1D* hP_TSpectrum_forbinning = new TH1D();
+
+  gDirectory->GetObject(Form("hP_TSpectrum"),hP_TSpectrum_forbinning);
+
+  Int_t nbins_pt;
+  nbins_pt = GetNBinningFromHistogram(hP_TSpectrum_forbinning);
+  Double_t * xbins_pt;
+
+
+  xbins_pt = GetBinningFromHistogram(hP_TSpectrum_forbinning);
+
+
+
+
+
 
 
   // Wir definieren ein Canvas auf das wir malen können
@@ -46,8 +71,8 @@ void Pi0Simulation(TString AddName = "") {
   fy->SetParameters(1., 0., 4.);
 
   // histograms for generated and accepted pi0's
-  // TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",nbins_pt,xbins_pt); //edit mehr und nur bis 5 statt 20,0.,10.
-  // SetHistoStandardSettings(hNPi0_gen_pt);
+  TH1F* hNPi0_gen_pt = new TH1F("hNPi0_gen_pt","generated pi0 pT spectrum",nbins_pt-1,xbins_pt); //edit mehr und nur bis 5 statt 20,0.,10.
+  SetHistoStandardSettings(hNPi0_gen_pt);
 
   TH1F* hNPi0_gen_minv = new TH1F("hNPi0_gen_minv","generated pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_gen_minv);
@@ -68,13 +93,13 @@ void Pi0Simulation(TString AddName = "") {
   TH2F* hNPi0_acc_minv_pt_90 = new TH2F("hNPi0_acc_minv_pt_90","accepted pi0: minv vs. pT",100,0.,1.,100,0.,5.);
   SetHistoStandardSettings2(hNPi0_acc_minv_pt_90);
 
-  // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 60º)
-  // TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",nbins_pt,xbins_pt);
-  // SetHistoStandardSettings(hNPi0_acc_60);
+  // //pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 60º)
+  TH1F* hNPi0_acc_60 = new TH1F("hNPi0_acc_60","accepted pi0 pT spectrum with 60º",nbins_pt-1,xbins_pt);
+  SetHistoStandardSettings(hNPi0_acc_60);
   //
-  // // pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
-  // TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",nbins_pt,xbins_pt);
-  // SetHistoStandardSettings(hNPi0_acc_90);
+  // //pi0 accepted by VCal (eta coverage |eta| < 0.5 and phi 90º)
+  TH1F* hNPi0_acc_90 = new TH1F("hNPi0_acc_90","accepted pi0 pT spectrum with 90º",nbins_pt-1,xbins_pt);
+  SetHistoStandardSettings(hNPi0_acc_90);
 
   TH1F* hNPi0_acc_minv_high_pt = new TH1F("hNPi0_acc_minv_high_pt","accepted pi0 minv spectrum",100,0.,0.5);
   SetHistoStandardSettings(hNPi0_acc_minv_high_pt);
@@ -371,15 +396,12 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_60->Draw("pe,same");
   fpt->Draw("same");
   hNPi0_gen_pt->GetYaxis()->SetRangeUser(10e-19,1.);
-  cout << "Fehler vom 5 Bin bei 90 Grad Detektor " << hNPi0_acc_90->GetBinError(5)/hNPi0_acc_90->GetBinContent(5) << endl;
-  cout << "Fehler vom 90 Bin bei 90 Grad Detektor  " << hNPi0_acc_90->GetBinError(90)/hNPi0_acc_90->GetBinContent(90) << endl;
-  cout << "Content vom 90 Bin bei 90 Grad Detektor  " << hNPi0_acc_90->GetBinContent(90) << endl;
 
   cNPi0_pt->SetLogy();
 
   TLatex* lNPi0_gen_pt = new TLatex();
   lNPi0_gen_pt->SetTextSize(0.04);
-  lNPi0_gen_pt->DrawLatex(0.2,0.00000001,"#splitline{#pi^{0} Toy-Monte-Carlo-}{Simulation}");
+  lNPi0_gen_pt->DrawLatex(0.2,0.00000000001,"#splitline{#pi^{0} Toy-Monte-Carlo-}{Simulation}");
 
   hNPi0_gen_pt->SetXTitle("#it{p}_{T} (GeV/#it{c})");
   hNPi0_gen_pt->GetXaxis()->SetTitleOffset(1.4);
