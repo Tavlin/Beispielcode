@@ -4,7 +4,11 @@
 void Pi0Simulation(TString AddName = "") {
 
   // Auslesen der bins vom pt_Spectrum aus P_TSpectra.root
-  TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
+  // HOMI EDITION
+  //TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
+  TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ");
+
+
   if ( P_TSpectra->IsOpen() ) printf("HistoWOBackground_file opened successfully\n");
 
   if(P_TSpectra->IsZombie()){
@@ -18,9 +22,9 @@ void Pi0Simulation(TString AddName = "") {
 
   Int_t nbins_pt;
   nbins_pt = GetNBinningFromHistogram(hP_TSpectrum_forbinning);
+
+
   Double_t * xbins_pt;
-
-
   xbins_pt = GetBinningFromHistogram(hP_TSpectrum_forbinning);
 
 
@@ -64,7 +68,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 1000000;
+  const Int_t Npi0 = 10000000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -592,11 +596,19 @@ void Pi0Simulation(TString AddName = "") {
   hgen_500event_ratio->Divide(hNPi0_pt_500event);
 
 
+
+
   cNPi0_pt->cd();
   cNPi0_pt->Clear();
   hgen_500event_ratio->GetYaxis()->SetRangeUser(1.e0,1.e1);
   hgen_500event_ratio->SetTitle("");
   hgen_500event_ratio->Draw();
+
+  TLatex* lgen_500event_ratio = new TLatex();
+  lgen_500event_ratio->SetTextSize(0.04);
+  lgen_500event_ratio->DrawLatexNDC(0.5,0.5,"#frac{4#pi-Detector}{500-Event-Simulation-Detector}");
+
+
   hgen_500event_ratio->Write(Form("hgen_500event_ratio"));
   cNPi0_pt->SaveAs(Form("Simulation/RatioOfGenOver500Event%s.png", AddName.Data()));
 

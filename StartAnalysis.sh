@@ -72,15 +72,27 @@ fi
 
 if [ $DoToyMC = 1 ] ; then
   echo "";
-  echo "Starte Pi0Simulation.C...";
-  rm Pi0Simulation_*
-  mkdir -p Simulation  #Neuer Ordner
-  mkdir -p Simulation2
-  root -q -l -b Pi0Simulation.C\+\(\)
+  # echo "Starte Pi0Simulation.C...";
+  # rm Pi0Simulation_*
+  # mkdir -p Simulation  #Neuer Ordner
+  # mkdir -p Simulation2
+  # root -q -l -b Pi0Simulation.C\+\(\)
+  # cd ..
+  # rm -r Simulation3/
+  # mv  Beispielcode/Simulation/ Simulation3/
+  # cd Beispielcode
+
+  mkdir -p Corrected
+  rm DetectorRatio_C*
+  echo "Starte DetectorRatio.C...";
+  root -q -l -b DetectorRatio.C\+\(\)
   cd ..
-  rm -r Simulation3/
-  mv  Beispielcode/Simulation/ Simulation3/
+  rm -r Corrected/
+  mv  Beispielcode/Corrected/ Corrected/
   cd Beispielcode
+
+
+
   #root -q -l -b Tset.C\+\(\)
   # Hier wird ein C++ Macro in root aufgerufen
   # Das + bedeutet, dass wir den code kompilieren wollen (.C+),
