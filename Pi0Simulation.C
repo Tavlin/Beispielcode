@@ -68,7 +68,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 10000000;
+  const Int_t Npi0 = 1000000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -592,21 +592,21 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_pt_500event->Write(Form("hNPi0_pt_500event"));
 
   //make ratio plot:
-  TH1F *hgen_500event_ratio = (TH1F*)hNPi0_gen_pt->Clone("hgen_500event_ratio");
-  hgen_500event_ratio->Divide(hNPi0_pt_500event);
-
-
+  TH1F *hgen_500event_ratio = (TH1F*)hNPi0_pt_500event->Clone("hgen_500event_ratio");
+  hgen_500event_ratio->Divide(hNPi0_gen_pt);
 
 
   cNPi0_pt->cd();
   cNPi0_pt->Clear();
-  hgen_500event_ratio->GetYaxis()->SetRangeUser(1.e0,1.e1);
+  hgen_500event_ratio->GetYaxis()->SetRangeUser(1.e0,1.e-1);
   hgen_500event_ratio->SetTitle("");
+  hgen_500event_ratio->SetYTitle("acceptance");
   hgen_500event_ratio->Draw();
+
 
   TLatex* lgen_500event_ratio = new TLatex();
   lgen_500event_ratio->SetTextSize(0.04);
-  lgen_500event_ratio->DrawLatexNDC(0.5,0.5,"#frac{4#pi-Detector}{500-Event-Simulation-Detector}");
+  lgen_500event_ratio->DrawLatexNDC(0.3,0.5,"#frac{500-Event-Simulation-Detector}{4#pi-Detector}");
 
 
   hgen_500event_ratio->Write(Form("hgen_500event_ratio"));
