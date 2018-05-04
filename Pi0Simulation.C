@@ -3,10 +3,13 @@
 
 void Pi0Simulation(TString AddName = "") {
 
+  TLatex* poweektex = new TLatex();
+
   // Auslesen der bins vom pt_Spectrum aus P_TSpectra.root
   // HOMI EDITION
   //TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
   TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ");
+
 
 
   if ( P_TSpectra->IsOpen() ) printf("HistoWOBackground_file opened successfully\n");
@@ -68,7 +71,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 1000000;
+  const Int_t Npi0 = 100000;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -598,15 +601,21 @@ void Pi0Simulation(TString AddName = "") {
 
   cNPi0_pt->cd();
   cNPi0_pt->Clear();
-  hgen_500event_ratio->GetYaxis()->SetRangeUser(1.e0,1.e-1);
+  cNPi0_pt->SetLogy(0);
   hgen_500event_ratio->SetTitle("");
+  hgen_500event_ratio->SetLineColor(kRed+1);
+  hgen_500event_ratio->SetMarkerColor(kRed+1);
+  hgen_500event_ratio->GetYaxis()->SetTitleOffset(1.2); // MUSS VLLT. GAENDERT WERDEN!!!!
+  hgen_500event_ratio->SetXTitle(pt_str);
   hgen_500event_ratio->SetYTitle("acceptance");
   hgen_500event_ratio->Draw();
 
 
   TLatex* lgen_500event_ratio = new TLatex();
-  lgen_500event_ratio->SetTextSize(0.04);
-  lgen_500event_ratio->DrawLatexNDC(0.3,0.5,"#frac{500-Event-Simulation-Detector}{4#pi-Detector}");
+  lgen_500event_ratio->SetTextSize(0.03);
+  lgen_500event_ratio->DrawLatexNDC(0.45,0.45,"#frac{#it{p}_{T} spectrum (#phi #leq 2#pi, #eta < 0.5)}{#it{p}_{T} spectrum (full acceptance)}");
+  poweektex->DrawLatexNDC(0.45,0.6,poweek_str);
+  poweektex->DrawLatexNDC(0.45,0.55,pi0togamma_str);
 
 
   hgen_500event_ratio->Write(Form("hgen_500event_ratio"));

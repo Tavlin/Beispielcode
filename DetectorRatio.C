@@ -2,6 +2,14 @@
 
 void DetectorRatio(TString AddName = "") {
 
+  TLatex* poweektex = new TLatex();
+
+  TLegend *leg_pt = new TLegend(0.55,0.7,0.9,0.9);
+  leg_pt->SetFillStyle(0);
+  leg_pt->SetBorderSize(0);
+  leg_pt->SetTextFont(43);
+  leg_pt->SetTextSize(25);
+
   TCanvas *c500eventSpectrumCorrected = new TCanvas("c500eventSpectrumCorrected","",1200,1200);
   SetCanvasStandardSettings(c500eventSpectrumCorrected);
 
@@ -41,7 +49,6 @@ void DetectorRatio(TString AddName = "") {
   TH1F* hCorrectedPTSpectrum = new TH1F("hCorrectedPTSpectrum","",binlenght-1,binning);
   SetHistoStandardSettings(hCorrectedPTSpectrum);
 
-  // std::cout << "binlenght = " << binlenght << std::endl;
   Double_t ratio_error, spectrum_error, ratio_bin, spe_bin;
   for (Int_t i = 1; i < binlenght; i++) {
     ratio_error = hgen_500event_ratio_1->GetBinError(i);
@@ -49,17 +56,17 @@ void DetectorRatio(TString AddName = "") {
     spectrum_error = hP_TSpectrum_1->GetBinError(i);
     spe_bin = hP_TSpectrum_1->GetBinContent(i);
 
-    // std::cout << hP_TSpectrum_1->GetBinContent(i) << " / " << hgen_500event_ratio_1->GetBinContent(i) << " = ";
 
     hCorrectedPTSpectrum->SetBinContent(i,(hP_TSpectrum_1->GetBinContent(i)/hgen_500event_ratio_1->GetBinContent(i)));
     hCorrectedPTSpectrum->SetBinError(i,sqrt((spectrum_error/ratio_bin)*(spectrum_error/ratio_bin)+(ratio_error*spe_bin/(ratio_bin*ratio_bin))*(ratio_error*spe_bin/(ratio_bin*ratio_bin))));
-    // std::cout  << hgen_500event_ratio_1->GetBinContent(i) << std::endl;
   }
 
-  hCorrectedPTSpectrum->SetLineColor(kBlue+2);
-  hCorrectedPTSpectrum->SetMarkerColor(kBlue+2);
-  hP_TSpectrum_1->SetLineColor(kGreen+3);
-  hP_TSpectrum_1->SetMarkerColor(kGreen+3);
+  hCorrectedPTSpectrum->SetLineColor(kRed+2);
+  hCorrectedPTSpectrum->SetMarkerColor(kRed+2);
+  hP_TSpectrum_1->SetLineColor(kBlue+1);
+  hP_TSpectrum_1->SetMarkerColor(kBlue+1);
+  leg_pt->AddEntry(hCorrectedPTSpectrum, "corrected spectrum");
+  leg_pt->AddEntry(hP_TSpectrum_1, "uncorrected spectrum");
 
   c500eventSpectrumCorrected->cd();
   c500eventSpectrumCorrected->SetLogy();
@@ -67,8 +74,9 @@ void DetectorRatio(TString AddName = "") {
   hCorrectedPTSpectrum->GetXaxis()->SetRangeUser(1.3,10.);
   hCorrectedPTSpectrum->Draw();
   hP_TSpectrum_1->Draw("same");
-
-  // c500eventSpectrumCorrected->Update();
+  poweektex->SetTextSize(0.04);
+  poweektex->DrawLatexNDC(0.3,0.4,poweek_str);
+  poweektex->DrawLatexNDC(0.3,0.35,pi0togamma_str);
 
   c500eventSpectrumCorrected->SaveAs(Form("Corrected/CorrectedPTSpectrum.png"));
   hCorrectedPTSpectrum->SaveAs(Form("Corrected/CorrectedPTSpectrum.root"));
