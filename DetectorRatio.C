@@ -43,6 +43,34 @@ void DetectorRatio(TString AddName = "") {
   TH1F* hgen_500event_ratio_1 = new TH1F();
   pTSpectra->GetObject("hgen_500event_ratio",hgen_500event_ratio_1);
 
+
+  // Angelinas Histogramme einlesen und einbauen:
+  TFile* P_TSpectra_angi = new TFile("/u/mhemmer/Documents/git/Beispielcode/ExtractSignal_korr_angi.root", "READ");
+  if ( P_TSpectra_angi->IsOpen() ) printf("P_TSpectra_angi opened successfully\n");
+
+
+  if(P_TSpectra_angi->IsZombie()){
+    std::cout << "ERROR: P_TSpectra_angi File not found" << std::endl;
+    return;
+  }
+
+  // get Histo from file
+  TH1D* hP_TSpectrum_angi = new TH1D();
+  P_TSpectra_angi->GetObject("pT",hP_TSpectrum_angi);
+
+  TH1D* hP_TSpectrum_angi_korr = new TH1D();
+  P_TSpectra_angi->GetObject("pT_korr",hP_TSpectrum_angi_korr);
+
+  // Skalieren auf Anzahl Eents (hier 500)!
+  hP_TSpectrum_angi->Scale(1/500.);
+  hP_TSpectrum_angi_korr->Scale(1/500.);
+  hP_TSpectrum_angi->SetMarkerStyle(21);
+
+  hP_TSpectrum_angi->SetLineColor(kGreen+2);
+  hP_TSpectrum_angi_korr->SetLineColor(kViolet);
+  hP_TSpectrum_angi->SetMarkerColor(kGreen+2);
+  hP_TSpectrum_angi_korr->SetMarkerColor(kViolet);
+
   Int_t binlenght = GetNBinningFromHistogram(hP_TSpectrum_1);
   Double_t * binning = GetBinningFromHistogram(hP_TSpectrum_1);
 
@@ -65,8 +93,10 @@ void DetectorRatio(TString AddName = "") {
   hCorrectedPTSpectrum->SetMarkerColor(kRed+2);
   hP_TSpectrum_1->SetLineColor(kBlue+1);
   hP_TSpectrum_1->SetMarkerColor(kBlue+1);
-  leg_pt->AddEntry(hCorrectedPTSpectrum, "corrected spectrum");
-  leg_pt->AddEntry(hP_TSpectrum_1, "uncorrected spectrum");
+  leg_pt->AddEntry(hP_TSpectrum_1, "uncorrected spectrum by Marvin");
+  leg_pt->AddEntry(hCorrectedPTSpectrum, "corrected spectrum by Marvin");
+  leg_pt->AddEntry(hP_TSpectrum_angi, "uncorrected spectrum by Angelina");
+  leg_pt->AddEntry(hP_TSpectrum_angi_korr, "corrected spectrum by Angelina");
 
   c500eventSpectrumCorrected->cd();
   c500eventSpectrumCorrected->SetLogy();
@@ -74,6 +104,9 @@ void DetectorRatio(TString AddName = "") {
   hCorrectedPTSpectrum->GetXaxis()->SetRangeUser(1.3,10.);
   hCorrectedPTSpectrum->Draw();
   hP_TSpectrum_1->Draw("same");
+  hP_TSpectrum_angi->Draw("same");
+  hP_TSpectrum_angi_korr->Draw("same");
+  leg_pt->Draw("same");
   poweektex->SetTextSize(0.04);
   poweektex->DrawLatexNDC(0.3,0.4,poweek_str);
   poweektex->DrawLatexNDC(0.3,0.35,pi0togamma_str);
