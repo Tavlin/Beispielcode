@@ -72,15 +72,15 @@ fi
 
 if [ $DoToyMC = 1 ] ; then
   echo "";
-  echo "Starte Pi0Simulation.C...";
-  rm Pi0Simulation_*
-  mkdir -p Simulation  #Neuer Ordner
-  mkdir -p Simulation2
-  root -q -l -b Pi0Simulation.C\+\(\)
-  cd ..
-  rm -r Simulation3/
-  mv  Beispielcode/Simulation/ Simulation3/
-  cd Beispielcode
+  # echo "Starte Pi0Simulation.C...";
+  # rm Pi0Simulation_*
+  # mkdir -p Simulation  #Neuer Ordner
+  # mkdir -p Simulation2
+  # root -q -l -b Pi0Simulation.C\+\(\)
+  # cd ..
+  # rm -r Simulation3/
+  # mv  Beispielcode/Simulation/ Simulation3/
+  # cd Beispielcode
 
   mkdir -p Corrected
   rm DetectorRatio_C*
