@@ -21,8 +21,8 @@ void DetectorRatio(TString AddName = "") {
   SetCanvasStandardSettings(c500eventSpectrumCorrected);
 
   //Open and read  pt-Spektrum-500 Event file
-  TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ"); //homi
-  // TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ"); //uni
+  // TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ"); //homi
+  TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ"); //uni
   if ( P_TSpectra->IsOpen() ) printf("P_TSpectra opened successfully\n");
 
 
@@ -39,8 +39,8 @@ void DetectorRatio(TString AddName = "") {
 
 
   //Open and read Ratio File file
-  TFile* pTSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode/pTSpectra.root", "READ"); //homi
-  // TFile* pTSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode/pTSpectra.root", "READ"); //uni
+  // TFile* pTSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode/pTSpectra.root", "READ"); //homi
+  TFile* pTSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode/pTSpectra.root", "READ"); //uni
   if ( pTSpectra->IsOpen() ) printf("pTSpectra opened successfully\n");
 
   if(P_TSpectra->IsZombie()){
@@ -54,8 +54,8 @@ void DetectorRatio(TString AddName = "") {
 
 
   // Angelinas Histogramme einlesen und einbauen:
-  TFile* P_TSpectra_angi = new TFile("/home/marvin/Dokumente/git/Beispielcode/ExtractSignal_korr_angi.root", "READ"); //homi
-  // TFile* P_TSpectra_angi = new TFile("/u/mhemmer/Documents/git/Beispielcode/ExtractSignal_korr_angi.root", "READ"); //uni
+  // TFile* P_TSpectra_angi = new TFile("/home/marvin/Dokumente/git/Beispielcode/ExtractSignal_korr_angi.root", "READ"); //homi
+  TFile* P_TSpectra_angi = new TFile("/u/mhemmer/Documents/git/Beispielcode/ExtractSignal_korr_angi.root", "READ"); //uni
   if ( P_TSpectra_angi->IsOpen() ) printf("P_TSpectra_angi opened successfully\n");
 
 
@@ -138,27 +138,27 @@ void DetectorRatio(TString AddName = "") {
 
 
   hCorrectedPTSpectrum->SetXTitle("#it{p}_{T} (GeV/#it{c})");
-  hP_TSpectrum_angi_korr->SetXTitle("#it{p}_{T} (GeV/#it{c})");
+  // hP_TSpectrum_angi_korr->SetXTitle("#it{p}_{T} (GeV/#it{c})");
   hP_TSpectrum_1->SetXTitle("#it{p}_{T} (GeV/#it{c})");
-  hP_TSpectrum_angi->SetXTitle("#it{p}_{T} (GeV/#it{c})");
+  // hP_TSpectrum_angi->SetXTitle("#it{p}_{T} (GeV/#it{c})");
   hCorrectedPTSpectrum->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
-  hP_TSpectrum_angi_korr->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
+  // hP_TSpectrum_angi_korr->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
   hP_TSpectrum_1->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
-  hP_TSpectrum_angi->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
+  // hP_TSpectrum_angi->SetYTitle("#frac{1}{2#pi N_{evt}} #frac{dN}{#it{p}_{T}d#it{p}_{T}} (GeV/#it{c})^{-2}");
 
 
 
-  leg_pt->AddEntry(hP_TSpectrum_1, "uncorrected spectrum by Marvin");
-  leg_pt_corr->AddEntry(hCorrectedPTSpectrum, "corrected spectrum by Marvin");
-  leg_pt->AddEntry(hP_TSpectrum_angi, "uncorrected spectrum by Angelina");
-  leg_pt_corr->AddEntry(hP_TSpectrum_angi_korr, "corrected spectrum by Angelina");
+  leg_pt->AddEntry(hP_TSpectrum_1, "uncorrected spectrum");
+  leg_pt_corr->AddEntry(hCorrectedPTSpectrum, "corrected spectrum");
+  // leg_pt->AddEntry(hP_TSpectrum_angi, "uncorrected spectrum by Angelina");
+  // leg_pt_corr->AddEntry(hP_TSpectrum_angi_korr, "corrected spectrum by Angelina");
 
   c500eventSpectrumCorrected->cd();
   c500eventSpectrumCorrected->SetLogy();
   c500eventSpectrumCorrected->SetLogx();
   hCorrectedPTSpectrum->GetXaxis()->SetRangeUser(1.3,10.);
   hCorrectedPTSpectrum->Draw();
-  hP_TSpectrum_angi_korr->Draw("same");
+  // hP_TSpectrum_angi_korr->Draw("same");
   leg_pt_corr->Draw("same");
   poweektex->SetTextSize(0.04);
   poweektex->DrawLatexNDC(0.25,0.4,poweek_str);
@@ -170,7 +170,7 @@ void DetectorRatio(TString AddName = "") {
 
   c500eventSpectrumCorrected->SetLogx(0);
   hP_TSpectrum_1->Draw("");
-  hP_TSpectrum_angi->Draw("same");
+  // hP_TSpectrum_angi->Draw("same");
   leg_pt->Draw("same");
   poweektex->SetTextSize(0.04);
   poweektex->DrawLatexNDC(0.25,0.4,poweek_str);
