@@ -72,25 +72,34 @@ fi
 
 if [ $DoToyMC = 1 ] ; then
   echo "";
-  echo "Starte Pi0Simulation.C...";
-  rm Pi0Simulation_*
-  mkdir -p Simulation  #Neuer Ordner
-  mkdir -p Simulation2
-  root -q -l -b Pi0Simulation.C\+\(\)
-  cd ..
-  rm -r Simulation3/
-  mv  Beispielcode/Simulation/ Simulation3/
-  cd Beispielcode
 
-  mkdir -p Corrected
-  rm DetectorRatio_C*
-  echo "Starte DetectorRatio.C...";
-  root -q -l -b DetectorRatio.C\+\(\)
-  cd ..
-  rm -r Corrected/
-  mv  Beispielcode/Corrected/ Corrected/
-  cd Beispielcode
+  # echo "Starte Pi0Simulation.C...";
+  # rm Pi0Simulation_*
+  # mkdir -p Simulation  #Neuer Ordner
+  # mkdir -p Simulation2
+  # root -q -l -b Pi0Simulation.C\+\(\)
+  # cd ..
+  # rm -r Simulation3/
+  # mv  Beispielcode/Simulation/ Simulation3/
+  # cd Beispielcode
 
+  # mkdir -p Corrected
+  # rm DetectorRatio_C*
+  # echo "Starte DetectorRatio.C...";
+  # root -q -l -b DetectorRatio.C\+\(\)
+  # cd ..
+  # rm -r Corrected/
+  # mv  Beispielcode/Corrected/ Corrected/
+  # cd Beispielcode
+
+  echo "Starte Dreieck.C...";
+  rm Dreieck_*
+  mkdir -p Dreieck  #Neuer Ordner
+  root -q -l -b Dreieck.C\+\(\)
+  cd ..
+  rm -r Dreieck/
+  mv  Beispielcode/Dreieck/ Dreieck/
+  cd Beispielcode
 
 
   #root -q -l -b Tset.C\+\(\)

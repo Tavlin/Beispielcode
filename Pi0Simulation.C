@@ -3,12 +3,13 @@
 
 void Pi0Simulation(TString AddName = "") {
 
+  Float_t pi = TMath::Pi(); /* besser vor dem loop? */
   TLatex* poweektex = new TLatex();
 
   // Auslesen der bins vom pt_Spectrum aus P_TSpectra.root
   // HOMI EDITION
-  // TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
-  TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ");
+  TFile* P_TSpectra = new TFile("/home/marvin/Dokumente/git/Beispielcode2/P_TSpectra.root", "READ");
+  // TFile* P_TSpectra = new TFile("/u/mhemmer/Documents/git/Beispielcode2/P_TSpectra.root", "READ");
 
 
 
@@ -44,25 +45,25 @@ void Pi0Simulation(TString AddName = "") {
   TCanvas *cNPi0_minv = new TCanvas("cNPi0_minv","",1200,1200);
   SetCanvasStandardSettings(cNPi0_minv);
 
-  TCanvas *cNPi0_theta_pt = new TCanvas("cNPi0_theta_pt","",800,800);
+  TCanvas *cNPi0_theta_pt = new TCanvas("cNPi0_theta_pt","",1200,1200);
   SetCanvasStandardSettings(cNPi0_theta_pt);
 
-  TCanvas *cNPi0_costheta_pt = new TCanvas("cNPi0_costheta_pt","",800,800);
+  TCanvas *cNPi0_costheta_pt = new TCanvas("cNPi0_costheta_pt","",1200,1200);
   SetCanvasStandardSettings(cNPi0_costheta_pt);
 
-  TCanvas *cE1E2 = new TCanvas("cE1E2","",800,800);
+  TCanvas *cE1E2 = new TCanvas("cE1E2","",1200,1200);
   SetCanvasStandardSettings(cE1E2);
 
-  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",800,800);
+  TCanvas *cNPi0_gen_minv_pt = new TCanvas("cNPi0_gen_minv_pt","",1200,1200);
   SetCanvasStandardSettings(cNPi0_gen_minv_pt);
 
-  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",800,800);
+  TCanvas *cNPi0_acc_minv_pt_60 = new TCanvas("cNPi0_acc_minv_pt_60","",1200,1200);
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_60);
 
-  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",800,800);
+  TCanvas *cNPi0_acc_minv_pt_90 = new TCanvas("cNPi0_acc_minv_pt_90","",1200,1200);
   SetCanvasStandardSettings(cNPi0_acc_minv_pt_90);
 
-  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",800,800);
+  TCanvas *cNPi0_acc_minv_comp = new TCanvas("cNPi0_acc_minv_comp","",1200,1200);
 
   TCanvas *cNPi0_pt_500event = new TCanvas("cNPi0_pt_500event","",1200,1200);
   SetCanvasStandardSettings(cNPi0_pt_500event);
@@ -71,7 +72,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 1000000;
+  const Int_t Npi0 = 1.e7;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -96,7 +97,7 @@ void Pi0Simulation(TString AddName = "") {
   TH1F* hNPi0_pt_500event = new TH1F("hNPi0_pt_500event","Vergleichsspektrum für 500Event Simulation",nbins_pt-1,xbins_pt);
   SetHistoStandardSettings(hNPi0_pt_500event);
 
-  TH2F* hNPi0_gen_minv_pt = new TH2F("hNPi0_gen_minv_pt","generated pi0: minv vs. pT",100,0.,1.,100,0.,7.);
+  TH2F* hNPi0_gen_minv_pt = new TH2F("hNPi0_gen_minv_pt","generated pi0: minv vs. pT",300,0.,3.,300,0.,3.);
   SetHistoStandardSettings2(hNPi0_gen_minv_pt);
 
   TH2F* hNPi0_acc_minv_pt_60 = new TH2F("hNPi0_acc_minv_pt_60","accepted pi0: minv vs. pT",100,0.,1.,100,0.,5.);
@@ -137,11 +138,23 @@ void Pi0Simulation(TString AddName = "") {
   TH2F* hE1E2_cosTheta = new TH2F("hE1E2_cosTheta","",100,-1.,1.,100,0.,10.);
   SetHistoStandardSettings2(hE1E2_cosTheta);
 
+  TH2F* hWinkelAbdeckung = new TH2F("hWinkelAbdeckung","Winkelabdeckung same events",100,-1.,1.,180,-1.*pi,1.0001*pi);
+  SetHistoStandardSettings2(hWinkelAbdeckung);
+  hWinkelAbdeckung->SetXTitle("#it{#eta}");
+  hWinkelAbdeckung->SetYTitle("#it{#phi}");
+  hWinkelAbdeckung->GetYaxis()->SetBit(TAxis::kLabelsVert);
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(1,"0");
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(hWinkelAbdeckung->GetYaxis()->FindBin(pi), "#pi");
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(hWinkelAbdeckung->GetYaxis()->FindBin(pi/2.),"#frac{#pi}{2}");
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(hWinkelAbdeckung->GetYaxis()->FindBin(0.),"0");
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(hWinkelAbdeckung->GetYaxis()->FindBin(-pi), "-#pi");
+  hWinkelAbdeckung->GetYaxis()->SetBinLabel(hWinkelAbdeckung->GetYaxis()->FindBin(-pi/2.),"#frac{-#pi}{2}");
+  hWinkelAbdeckung->GetXaxis()->SetNdivisions(5);
+
 
   for (int ip=0; ip < Npi0; ip++) {
     printProgress( ((Double_t)ip) / ((Double_t)Npi0) );
 
-    Float_t pi = TMath::Pi(); /* besser vor dem loop? */
 
     // set pT, rapidity, ...
     Float_t pt_lab = gRandom->Uniform(10.);
@@ -202,10 +215,12 @@ void Pi0Simulation(TString AddName = "") {
     Float_t pt1 = sqrt(p1x*p1x + p1y*p1y);
     Float_t theta1 = atan2(pt1,p1z);
     Float_t eta1 = -log(tan(theta1/2.));
+    Float_t phi1_test = atan2(p1y,p1x);
 
     Float_t pt2 = sqrt(p2x*p2x + p2y*p2y);
     Float_t theta2 = atan2(pt2,p2z);
     Float_t eta2 = -log(tan(theta2/2.));
+    Float_t phi2_test = atan2(p2y,p2x);
 
 
 
@@ -238,7 +253,9 @@ void Pi0Simulation(TString AddName = "") {
 
 ///////////////////////////////////////////////
 
-
+    // Test für Winkelabdeckung:
+    hWinkelAbdeckung->Fill(eta1, phi1_test);
+    hWinkelAbdeckung->Fill(eta2, phi2_test);
 
     hNPi0_gen_pt->Fill(pt_lab, fpt->Eval(pt_lab));
     // Implementiere eine endliche Detektorakzeptanz in phi
@@ -585,10 +602,20 @@ void Pi0Simulation(TString AddName = "") {
   cNPi0_theta_pt->SaveAs(Form("Simulation/Theta_PT%s.png", AddName.Data()));
   cNPi0_costheta_pt->SaveAs(Form("Simulation/CosTheta_PT%s.png", AddName.Data()));
 
+
+  cNPi0_costheta_pt->cd();
+  cNPi0_costheta_pt->Clear();
+  hWinkelAbdeckung->GetZaxis()->SetRangeUser(1.e0,1.e3);
+  hWinkelAbdeckung->Draw("colz");
+  hWinkelAbdeckung->GetZaxis()->SetRangeUser(1.e0,1.e3);
+  cNPi0_costheta_pt->Update();
+  cNPi0_costheta_pt->SaveAs("Simulation/Winkelabdeckung.png");
+
   TFile* pTSpectra = new TFile("pTSpectra.root", "RECREATE");
   //Lese und speichere in Datei namens HistoFile.root
   //if ( HistoWOBackground_file->IsOpen() ) printf("HistoWOBackground_file opened successfully\n");
 
+  hNPi0_gen_minv_pt->Write("hNPi0_gen_minv_pt");
   hNPi0_gen_pt->Write(Form("hNPi0_gen_pt"));
   hNPi0_acc_90->Write(Form("hNPi0_acc_90"));
   hNPi0_acc_60->Write(Form("hNPi0_acc_60"));
