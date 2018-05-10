@@ -92,15 +92,23 @@ if [ $DoToyMC = 1 ] ; then
   # mv  Beispielcode/Corrected/ Corrected/
   # cd Beispielcode
 
-  echo "Starte Dreieck.C...";
-  rm Dreieck_*
-  mkdir -p Dreieck  #Neuer Ordner
-  root -q -l -b Dreieck.C\+\(\)
-  cd ..
-  rm -r Dreieck/
-  mv  Beispielcode/Dreieck/ Dreieck/
-  cd Beispielcode
+  # echo "Starte Dreieck.C...";
+  # rm Dreieck_*
+  # mkdir -p Dreieck  #Neuer Ordner
+  # root -q -l -b Dreieck.C\+\(\)
+  # cd ..
+  # rm -r Dreieck/
+  # mv  Beispielcode/Dreieck/ Dreieck/
+  # cd Beispielcode
 
+  echo "Starte DreieckExtraction.C...";
+  rm DreieckExtraction_*
+  mkdir -p DreieckExtraction  #Neuer Ordner
+  root -q -l -b DreieckExtraction.C\+\(\)
+  cd ..
+  rm -r DreieckExtraction/
+  mv  Beispielcode/DreieckExtraction/ DreieckExtraction/
+  cd Beispielcode
 
   #root -q -l -b Tset.C\+\(\)
   # Hier wird ein C++ Macro in root aufgerufen

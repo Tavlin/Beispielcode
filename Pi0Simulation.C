@@ -72,7 +72,7 @@ void Pi0Simulation(TString AddName = "") {
   Float_t m = 0.135; // pi0 mass
 
   // generate a certain number of pi0
-  const Int_t Npi0 = 1.e7;
+  const Int_t Npi0 = 1.e8;
 
   // pT distribution
   TF1* fpt = new TF1("fpt","x*exp(-x/0.2)",0.,10.);
@@ -620,6 +620,7 @@ void Pi0Simulation(TString AddName = "") {
   hNPi0_acc_90->Write(Form("hNPi0_acc_90"));
   hNPi0_acc_60->Write(Form("hNPi0_acc_60"));
   hNPi0_pt_500event->Write(Form("hNPi0_pt_500event"));
+  hNPi0_gen_minv_pt->Write("hNPi0_gen_minv_pt");
 
   //make ratio plot:
   TH1F *hgen_500event_ratio = (TH1F*)hNPi0_pt_500event->Clone("hgen_500event_ratio");
